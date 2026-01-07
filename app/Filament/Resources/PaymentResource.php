@@ -34,77 +34,89 @@ class PaymentResource extends Resource
                         ->required(),
 
                     Forms\Components\Textarea::make('note')
-                        ->label('Catatan Admin'),
+                        ->label('Catatan Admin')
+                        ->rows(3),
                 ]),
         ]);
     }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('invoice')
-                ->searchable(),
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('invoice')
+                    ->label('Invoice')
+                    ->searchable()
+                    ->copyable(),
 
-            Tables\Columns\TextColumn::make('student.nama_lengkap')
-                ->label('Nama Siswa'),
+                Tables\Columns\TextColumn::make('student.nama_lengkap')
+                    ->label('Nama Siswa')
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('amount')
-                ->money('IDR'),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('IDR'),
 
-            Tables\Columns\ImageColumn::make('proof')
-                ->label('Bukti')
-                ->disk('public')
-                ->height(80),
+                Tables\Columns\ImageColumn::make('proof')
+                    ->label('Bukti')
+                    ->disk('public')
+                    ->height(80)
+                    ->visibility('private'),
 
-            Tables\Columns\BadgeColumn::make('status')
-                ->colors([
-                    'warning' => 'pending',
-                    'success' => 'approved',
-                    'danger' => 'rejected',
-                ]),
-        ])
-        ->actions([
-            Tables\Actions\Action::make('approve')
-                ->label('Setujui')
-                ->color('success')
-                ->icon('heroicon-o-check-circle')
-                ->visible(fn ($record) => $record->status === 'pending')
-                ->requiresConfirmation()
-                ->action(function ($record) {
-                    $record->update(['status' => 'approved']);
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'warning' => 'pending',
+                        'success' => 'approved',
+                        'danger' => 'rejected',
+                    ]),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Disetujui',
+                        'rejected' => 'Ditolak',
+                    ]),
+            ])
+            ->actions([
+                Tables\Actions\Action::make('approve')
+                    ->label('Setujui')
+                    ->color('success')
+                    ->icon('heroicon-o-check-circle')
+                    ->visible(fn (Payment $record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->action(function (Payment $record) {
+                        $record->update(['status' => 'approved']);
 
-                    if ($record->student) {
-                        $record->student->update(['status' => 'verifikasi']);
-                    }
+                        if ($record->student) {
+                            $record->student->update(['status' => 'verifikasi']);
+                        }
 
-                    Notification::make()
-                        ->title('Pembayaran Disetujui')
-                        ->body('Pembayaran ' . $record->invoice . ' berhasil diverifikasi.')
-                        ->success()
-                        ->send();
-                }),
+                        Notification::make()
+                            ->title('Pembayaran Disetujui')
+                            ->body('Pembayaran ' . $record->invoice . ' berhasil diverifikasi.')
+                            ->success()
+                            ->send();
+                    }),
 
-            Tables\Actions\Action::make('reject')
-                ->label('Tolak')
-                ->color('danger')
-                ->icon('heroicon-o-x-circle')
-                ->visible(fn ($record) => $record->status === 'pending')
-                ->requiresConfirmation()
-                ->action(function ($record) {
-                    $record->update(['status' => 'rejected']);
+                Tables\Actions\Action::make('reject')
+                    ->label('Tolak')
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle')
+                    ->visible(fn (Payment $record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->action(function (Payment $record) {
+                        $record->update(['status' => 'rejected']);
 
-                    Notification::make()
-                        ->title('Pembayaran Ditolak')
-                        ->body('Pembayaran ' . $record->invoice . ' ditolak.')
-                        ->danger()
-                        ->send();
-                }),
-
-            Tables\Actions\EditAction::make(),
-        ]);
-}
-
+                        Notification::make()
+                            ->title('Pembayaran Ditolak')
+                            ->body('Pembayaran ' . $record->invoice . ' ditolak.')
+                            ->danger()
+                            ->send();
+                    }),
+            ]);
+    }
 
     public static function getPages(): array
     {

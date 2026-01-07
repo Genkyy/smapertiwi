@@ -14,6 +14,7 @@ class PaymentController extends Controller
      */
     public function show(Student $student)
     {
+        // pastikan student benar-benar ada
         return view('pembayaran', compact('student'));
     }
 
@@ -22,9 +23,15 @@ class PaymentController extends Controller
      */
     public function store(Request $request, Student $student)
     {
+        if ($student->payments()->where('status', 'pending')->exists()) {
+            return back()->withErrors([
+                'proof' => 'Masih ada pembayaran yang menunggu verifikasi admin.',
+            ]);
+        }
+
         $data = $request->validate([
-            'method' => 'required',
-            'proof'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'method' => 'nullable|string',
+            'proof'  => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $filePath = $request->file('proof')->store('payments', 'public');
@@ -32,14 +39,14 @@ class PaymentController extends Controller
         Payment::create([
             'student_id' => $student->id,
             'invoice'    => 'INV-' . now()->format('Ymd') . '-' . Str::upper(Str::random(6)),
-            'amount'     => 160000,
-            'method'     => $data['method'],
+            'amount'     => 2500000, // samakan dengan UI
+            'method'     => $data['method'] ?? 'manual',
             'proof'      => $filePath,
             'status'     => 'pending',
         ]);
 
         return redirect()
-            ->back()
+            ->route('payment.show', $student->id)
             ->with('success', 'Bukti pembayaran berhasil diupload, menunggu verifikasi admin.');
     }
 }

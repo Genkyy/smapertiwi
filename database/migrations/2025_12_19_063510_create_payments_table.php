@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+    Schema::create('payments', function (Blueprint $table) {
     $table->id();
     $table->foreignId('student_id')->constrained()->cascadeOnDelete();
     $table->string('invoice')->unique();
-    $table->integer('amount');
+    $table->unsignedInteger('amount'); // 🔧 lebih aman
     $table->string('method')->nullable();
-    $table->string('proof')->nullable(); // bukti bayar
+    $table->string('proof')->nullable();
     $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
     $table->text('note')->nullable();
     $table->timestamps();
+
+    $table->index('status'); // 🔧 tambahan kecil tapi penting
 });
+
 
     }
 

@@ -1,667 +1,798 @@
 @include('layout.header')
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Formulir Pendaftaran Siswa</title>
 
-<section class="spmb-form-container">
-      <h1 class="spmb-title">
-        Formulir Pendaftaran SPMB Online <br />
-        SMA PERTIWI MEDAN
-      </h1>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Noto+Sans:wght@300..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    {{-- Tailwind --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-      <!-- PROGRESS BAR -->
-      <div class="spmb-progressbar">
-        <div class="spmb-progress-track">
-          <div class="spmb-progress-fill" id="progress"></div>
-        </div>
+</head>
 
-        <ul class="spmb-progress-steps">
-          <li class="spmb-step active">
-            <div class="spmb-step-icon">
-              <i class="fa-solid fa-file-contract"></i>
-            </div>
-            <div class="spmb-step-label">Ketentuan</div>
-          </li>
+<body class="bg-slate-50 text-slate-900 font-display">
 
-          <li class="spmb-step">
-            <div class="spmb-step-icon">
-              <i class="fa-solid fa-user-graduate"></i>
-            </div>
-            <div class="spmb-step-label">Data Siswa</div>
-          </li>
-
-          <li class="spmb-step">
-            <div class="spmb-step-icon">
-              <i class="fa-solid fa-map-location-dot"></i>
-            </div>
-            <div class="spmb-step-label">Alamat</div>
-          </li>
-
-          <li class="spmb-step">
-            <div class="spmb-step-icon"><i class="fa-solid fa-users"></i></div>
-            <div class="spmb-step-label">Orang Tua</div>
-          </li>
-
-          <li class="spmb-step">
-            <div class="spmb-step-icon"><i class="fa-solid fa-school"></i></div>
-            <div class="spmb-step-label">Sekolah</div>
-          </li>
-
-          <li class="spmb-step">
-            <div class="spmb-step-icon">
-              <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="spmb-step-label">Konfirmasi</div>
-          </li>
-        </ul>
-      </div>
+<div class="mx-auto max-w-4xl px-4 py-10">
 @if ($errors->any())
-  <div style="background:#fee;color:#900;padding:10px;margin-bottom:15px;">
-    <ul>
-      @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-      @endforeach
-    </ul>
-  </div>
+<div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm">
+    <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
+            <span class="material-symbols-outlined">error</span>
+        </div>
+        <div>
+            <h4 class="font-semibold text-red-700">
+                Formulir belum lengkap
+            </h4>
+            <ul class="mt-2 list-disc pl-5 text-sm text-red-600 space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+</div>
 @endif
 
+
 <form
-  id="registrationForm"
-  method="POST"
-  action="{{ route('pendaftaran.store') }}"
-  enctype="multipart/form-data"
+    method="POST"
+    action="{{ route('pendaftaran.store') }}"
+    enctype="multipart/form-data"
+    class="space-y-10"
 >
-  @csrf
-        <!-- STEP 1 -->
-        <div class="spmb-step-page active">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Ketentuan Pendaftaran</h2>
-            <img src="assets/images/alur.jpeg" class="spmb-img" />
+    @csrf
+<!-- PROGRESS -->
+<!-- Progress Step -->
+<div class="mb-12">
+    <ol class="relative flex items-center justify-between">
+        <!-- Garis -->
+        <div class="absolute left-0 top-1/2 h-1 w-full -translate-y-1/2 rounded bg-slate-200"></div>
+        <div id="progressLine" class="absolute left-0 top-1/2 h-1 w-0 -translate-y-1/2 rounded bg-primary transition-all duration-500"></div>
 
-            <p class="spmb-info-text">
-              SPMB Online SMA Pertiwi Medan digunakan untuk mempermudah calon
-              siswa melakukan pendaftaran tanpa harus datang ke sekolah. Mohon
-              mengisi data dengan benar, akurat dan sesuai dokumen resmi.
-            </p>
+        <!-- Step 1 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="1">
+            <div class="step-circle active">
+                <span class="material-symbols-outlined">gavel</span>
+            </div>
+            <span class="step-label active">Ketentuan</span>
+        </li>
 
-            <label class="spmb-agree">
-              <input type="radio" name="setuju_ketentuan" required />
-              <span>Saya menyetujui seluruh ketentuan pendaftaran</span>
-            </label>
-          </div>
+        <!-- Step 2 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="2">
+            <div class="step-circle">
+                <span class="material-symbols-outlined">person</span>
+            </div>
+            <span class="step-label">Data Siswa</span>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="3">
+            <div class="step-circle">
+                <span class="material-symbols-outlined">home</span>
+            </div>
+            <span class="step-label">Alamat</span>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="4">
+            <div class="step-circle">
+                <span class="material-symbols-outlined">family_restroom</span>
+            </div>
+            <span class="step-label">Orang Tua</span>
+        </li>
+
+        <!-- Step 5 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="5">
+            <div class="step-circle">
+                <span class="material-symbols-outlined">school</span>
+            </div>
+            <span class="step-label">Sekolah</span>
+        </li>
+
+        <!-- Step 6 -->
+        <li class="relative z-10 flex flex-col items-center" data-progress="6">
+            <div class="step-circle">
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <span class="step-label">Konfirmasi</span>
+        </li>
+    </ol>
+</div>
+
+<!-- Ketentuan Pendaftaran -->
+<section id="step1" data-step="1" class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">gavel</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Ketentuan Pendaftaran</h3>
+    </div>
+
+    <div class="mb-6 text-sm text-slate-600 space-y-3">
+        <p>Mohon perhatikan ketentuan berikut sebelum melanjutkan pendaftaran:</p>
+        <ul class="list-disc pl-5 space-y-2">
+            <li>Data harus sesuai dengan dokumen resmi.</li>
+            <li>Wajib mengunggah pas foto, KK, dan Ijazah/SKL.</li>
+            <li>Pemalsuan data menyebabkan pembatalan pendaftaran.</li>
+            <li>Nomor WhatsApp harus aktif.</li>
+        </ul>
+    </div>
+
+    <div class="rounded-lg bg-blue-50 p-4">
+        <label class="flex items-start gap-3 cursor-pointer">
+            <input
+                type="checkbox"
+                required
+                class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary"
+            />
+            <span class="text-sm font-medium text-slate-800">
+                Saya telah membaca dan menyetujui seluruh ketentuan pendaftaran.
+            </span>
+        </label>
+    </div>
+    <div class="mt-6 flex justify-end">
+    <button
+        type="button"
+        onclick="nextStep()"
+        class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white"
+    >
+        Lanjut
+    </button>
+</div>
+
+</section>
+<!-- Data siswa -->
+<section id="step2" data-step="2" class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">person</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Data Siswa</h3>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <!-- Nama -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Nama Lengkap</label>
+            <input type="text" name="nama_lengkap" placeholder="Sesuai Akta Kelahiran"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary" required>
         </div>
 
-        <!-- STEP 2: DATA SISWA (DESAIN BARU) -->
-        <div class="spmb-step-page">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Data Siswa</h2>
+        <!-- NISN -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">NISN</label>
+            <input type="text" name="nisn" required minlength="10" maxlength="10" placeholder="10 digit angka"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
 
-            <!-- 1 Kolom -->
-            <div class="spmb-form-group">
-              <label>Nama Lengkap</label>
-              <input name="nama_lengkap" type="text" class="spmb-input" required>
-            </div>
+        <!-- NIK -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">NIK</label>
+            <input type="text" name="nik" required minlength="16" maxlength="16" placeholder="16 digit angka"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
 
-            <div class="spmb-form-group">
-              <label>NISN</label>
-              <input name="nisn" type="text" class="spmb-input">
-            </div>
+        <!-- Tempat Lahir -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Tempat Lahir</label>
+            <input type="text" name="tempat_lahir"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
 
-            <div class="spmb-form-group">
-              <label>NIK</label>
-              <input name="nik" type="text" class="spmb-input" placeholder="Masukkan NIK siswa">
-            </div>
+        <!-- Tanggal Lahir -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
 
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Tempat Lahir</label>
-                <input name="tempat_lahir" type="text" class="spmb-input">
-              </div>
-
-              <div class="spmb-form-group">
-                <label>Tanggal Lahir</label>
-                <input name="tanggal_lahir" type="date" class="spmb-input">
-              </div>
-            </div>
-            <div class="spmb-form-group">
-              <label>Jenis Kelamin</label>
-              <select name="jenis_kelamin" class="spmb-input" required>
-                <option value="">Pilih Jenis Kelamin</option>
+        <!-- Jenis Kelamin -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Jenis Kelamin</label>
+            <select name="jenis_kelamin"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+                <option value="">Pilih</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
-              </select>
-            </div>
-            <div class="spmb-form-group">
-            <label>Agama</label>
-            <select name="agama" class="spmb-input" required>
-              <option value="">Pilih Agama</option>
-              <option value="Islam">Islam</option>
-              <option value="Kristen">Kristen</option>
-              <option value="Katolik">Katolik</option>
-              <option value="Hindu">Hindu</option>
-              <option value="Budha">Budha</option>
             </select>
-          </div>
+        </div>
 
-          <!-- JURUSAN -->
-          <div class="spmb-form-group">
-            <label>Jurusan</label>
-            <select name="jurusan" class="spmb-input" required>
-              <option value="">Pilih Jurusan</option>
-              <option value="IPA">IPA</option>
-              <option value="IPS">IPS</option>
+        <!-- Agama -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Agama</label>
+            <select name="agama"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
+                <option>Islam</option>
+                <option>Kristen</option>
+                <option>Katolik</option>
+                <option>Hindu</option>
+                <option>Buddha</option>
+                <option>Konghucu</option>
             </select>
-          </div>
-            <div class="spmb-form-group">
-              <label>Nomor HP</label>
-              <input name="no_hp" type="number" class="spmb-input">
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Ekstrakurikuler</label>
-              <select name="ekskul" class="spmb-input">
-                <option value="">Pilih Ekstrakurikuler</option>
-                <option value="Futsal">Futsal</option>
-                <option value="Basket">Basket</option>
-                <option value="Musik">Musik</option>
-                <option value="Pramuka">Pramuka</option>
-                <option value="Tari">Tari</option>
-                <option value="Tahfidz">Tahfidz</option>
-                <option value="Multimedia">Multimedia</option>
-                <option value="E-Sport">E-Sport</option>
-              </select>
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Mendapat Informasi Sekolah dari</label>
-              <input name="info_dari" type="text" class="spmb-input">
-            </div>
-
-
-            <hr class="spmb-divider" />
-
-            <h3 class="spmb-subtitle">Upload Dokumen Persyaratan</h3>
-            <br />
-
-            <!-- Pas Foto -->
-            <div class="spmb-form-group">
-              <label>Upload Pas Foto</label>
-              <input name="foto" type="file" class="spmb-input" accept=".jpg,.jpeg,.png">
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Upload Kartu Keluarga</label>
-              <input name="kk" type="file" class="spmb-input" accept=".jpg,.jpeg,.png,.pdf">
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Upload Ijazah / SKL</label>
-              <input name="ijazah" type="file" class="spmb-input" accept=".jpg,.jpeg,.png,.pdf">
-            </div>
-
-          </div>
         </div>
-        <!-- STEP 3: ALAMAT -->
-        <div class="spmb-step-page">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Alamat Calon Siswa</h2>
 
-            <div class="spmb-form-group">
-              <label>Alamat Lengkap</label>
-              <input name="alamat" type="text" class="spmb-input">
+        <!-- Jurusan -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Jurusan Pilihan</label>
+            <div class="flex gap-4">
+                <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 cursor-pointer hover:bg-slate-50">
+                    <input type="radio" name="jurusan" value="IPA" class="text-primary focus:ring-primary">
+                    <span class="text-sm">IPA (Saintek)</span>
+                </label>
+                <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 cursor-pointer hover:bg-slate-50">
+                    <input type="radio" name="jurusan" value="IPS" class="text-primary focus:ring-primary">
+                    <span class="text-sm">IPS (Soshum)</span>
+                </label>
             </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Kecamatan</label>
-                <input name="kecamatan" type="text" class="spmb-input">
-              </div>
-
-              <div class="spmb-form-group">
-                <label>Kabupaten/Kota</label>
-                <input name="kabupaten" type="text" class="spmb-input">
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Provinsi</label>
-                <input name="provinsi" type="text" class="spmb-input">
-              </div>
-
-              <div class="spmb-form-group">
-                <label>Kode Pos</label>
-                <input name="kode_pos" type="number" class="spmb-input" placeholder="Kode pos">
-              </div>
-            </div>
-          </div>
         </div>
-        <!-- STEP 4: IDENTITAS ORANG TUA / WALI -->
-        <div class="spmb-step-page">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Identitas Orang Tua & Wali</h2>
 
-            <!-- =============================== -->
-            <!-- DATA AYAH -->
-            <!-- =============================== -->
-            <h3 class="spmb-subtitle">Data Ayah Kandung</h3>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Nomor Kartu Keluarga</label>
-                <input name="no_kk" type="text" class="spmb-input" placeholder="Nomor KK" />
-              </div>
-              <div class="spmb-form-group">
-                <label>Nama Kepala Keluarga</label>
-                <input name="nama_kk" type="text" class="spmb-input" placeholder="Nama KK" />
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Nama Ayah</label>
-                <input name="nama_ayah" type="text" class="spmb-input" placeholder="Nama ayah" />
-              </div>
-              <div class="spmb-form-group">
-                <label>NIK Ayah</label>
-                <input name="nik_ayah" type="text" class="spmb-input" placeholder="NIK ayah" />
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Tahun Lahir Ayah</label>
-                <input name="tahun_lahir_ayah" type="number" class="spmb-input" placeholder="2000" required />
-              </div>
-              <div class="spmb-form-group">
-                <label>Status Ayah</label>
-                <select class="spmb-input" name="status_ayah">
-                  <option>Pilih status</option>
-                  <option value="Masih Hidup">Masih Hidup</option>
-                  <option value="Sudah Meninggal">Sudah Meninggal</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Pekerjaan Ayah</label>
-                <input name="pekerjaan_ayah"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Pekerjaan ayah"
-                />
-              </div>
-              <div class="spmb-form-group">
-                <label>Penghasilan Ayah</label>
-                <input name="penghasilan_ayah"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Contoh: 2.000.000"
-                />
-              </div>
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Pendidikan Terakhir Ayah</label>
-              <input name="pendidikan_ayah"
-                type="text"
-                class="spmb-input"
-                placeholder="Pendidikan ayah"
-              />
-            </div>
-            <div class="spmb-form-group">
-              <label>Nomor HP</label>
-              <input name="hp_ayah" type="number" class="spmb-input" placeholder="08xxxx" />
-            </div>
-
-            <hr class="spmb-divider" />
-
-            <!-- =============================== -->
-            <!-- DATA IBU -->
-            <!-- =============================== -->
-            <h3 class="spmb-subtitle">Data Ibu Kandung</h3>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Nama Ibu</label>
-                <input name="nama_ibu" type="text" class="spmb-input" placeholder="Nama ibu" />
-              </div>
-              <div class="spmb-form-group">
-                <label>NIK Ibu</label>
-                <input name="nik_ibu" type="text" class="spmb-input" placeholder="NIK ibu" />
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Tahun Lahir Ibu</label>
-                <input name="tahun_lahir_ibu" type="number" class="spmb-input" placeholder="2000" />
-              </div>
-              <div class="spmb-form-group">
-                <label>Status Ibu</label>
-                <select name="status_ibu" class="spmb-input">
-                  <option value="">Pilih status</option>
-                  <option value="Masih Hidup">Masih Hidup</option>
-                  <option value="Sudah Meninggal">Sudah Meninggal</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Pekerjaan Ibu</label>
-                <input name="pekerjaan_ibu"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Pekerjaan ibu"
-                />
-              </div>
-              <div class="spmb-form-group">
-                <label>Penghasilan Ibu</label>
-                <input name="penghasilan_ibu"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Contoh: 2.000.000"
-                />
-              </div>
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Pendidikan Terakhir Ibu</label>
-              <input name="pendidikan_ibu"
-                type="text"
-                class="spmb-input"
-                placeholder="Pendidikan ibu"
-              />
-            </div>
-            <div class="spmb-form-group">
-              <label>Nomor HP</label>
-              <input name="hp_ibu" type="number" class="spmb-input" placeholder="08xxxx" />
-            </div>
-
-            <hr class="spmb-divider" />
-
-            <!-- =============================== -->
-            <!-- DATA WALI -->
-            <!-- =============================== -->
-            <h3 class="spmb-subtitle">Data Wali</h3>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Nama Wali</label>
-                <input name="nama_wali" type="text" class="spmb-input" placeholder="Nama wali" />
-              </div>
-              <div class="spmb-form-group">
-                <label>NIK Wali</label>
-                <input name="nik_wali" type="text" class="spmb-input" placeholder="NIK wali" />
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Tahun Lahir Wali</label>
-                <input name="tahun_lahir_wali" type="number" class="spmb-input" placeholder="2000" />
-              </div>
-              <div class="spmb-form-group">
-                <label>Status Wali</label>
-                <select name="status_wali" class="spmb-input">
-                  <option value="">Pilih status</option>
-                  <option value="Masih Hidup">Masih Hidup</option>
-                  <option value="Sudah Meninggal">Sudah Meninggal</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Pekerjaan Wali</label>
-                <input name="pekerjaan_wali"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Pekerjaan wali"
-                />
-              </div>
-              <div class="spmb-form-group">
-                <label>Penghasilan Wali</label>
-                <input name="penghasilan_wali"
-                  type="text"
-                  class="spmb-input"
-                  placeholder="Contoh: 2.000.000"
-                />
-              </div>
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Pendidikan Terakhir Wali</label>
-              <input name="pendidikan_wali"
-                type="text"
-                class="spmb-input"
-                placeholder="Pendidikan wali"
-              />
-            </div>
-            <div class="spmb-form-group">
-              <label>Nomor HP</label>
-              <input name="hp_wali" type="number" class="spmb-input" placeholder="08xxxx" />
-            </div>
-
-            <hr class="spmb-divider" />
-
-            <!-- =============================== -->
-            <!-- STATUS KARTU -->
-            <!-- =============================== -->
-            <h3 class="spmb-subtitle">Status Kepemilikan Kartu</h3>
-
-            <div class="spmb-form-group">
-              <label>No KKS</label>
-              <input name="no_kks" type="text" class="spmb-input" placeholder="Nomor KKS" />
-            </div>
-
-            <div class="spmb-form-group">
-              <label>No PKH</label>
-              <input name="no_pkh" type="text" class="spmb-input" placeholder="Nomor PKH" />
-            </div>
-
-            <div class="spmb-form-group">
-              <label>No KIP</label>
-              <input name="no_kip" type="text" class="spmb-input" placeholder="Nomor KIP" />
-            </div>
-          </div>
+        <!-- No HP -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">No HP / WhatsApp</label>
+            <input type="tel" name="no_hp" placeholder="08xxxxxxxxxx"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
         </div>
-        <!-- STEP 5: DATA SEKOLAH ASAL -->
-        <div class="spmb-step-page">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Data Sekolah Asal</h2>
 
-            <div class="spmb-form-group">
-              <label>Nama Sekolah</label>
-              <input name="nama_sekolah"
-                type="text"
-                class="spmb-input"
-                placeholder="Nama sekolah asal"
-              />
-            </div>
-
-            <div class="spmb-grid-2">
-              <div class="spmb-form-group">
-                <label>Jenjang Sekolah</label>
-                <select name="jenjang_sekolah" class="spmb-input">
-                  <option value="SMP">SMP</option>
-                  <option value="MTS">MTS</option>
-                </select>
-              </div>
-        <div class="spmb-form-group">
-          <label>Kelas</label>
-          <select name="kelas" class="spmb-input">
-            <option value="">Pilih</option>
-            <option value="X">X</option>
-            <option value="XI">XI</option>
-            <option value="XII">XII</option>
-          </select>
+        <!-- Minat Ekskul -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Minat Ekstrakurikuler</label>
+            <input type="text" name="ekskul"
+                placeholder="Contoh: Basket, Robotik, Paduan Suara"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
         </div>
-              <div class="spmb-form-group">
-                <label>Status Sekolah</label>
-                <select name="status_sekolah" class="spmb-input">
-                <option value="Negeri">Negeri</option>
-                <option value="Swasta">Swasta</option>
-              </select>
-              </div>
-            </div>
-
-            <div class="spmb-form-group">
-              <label>NPSN Sekolah</label>
-              <input name="npsn" type="text" class="spmb-input" placeholder="Nomor NPSN" />
-            </div>
-
-            <div class="spmb-form-group">
-              <label>Lokasi Sekolah</label>
-              <input
-                name="alamat_sekolah"
-                class="spmb-input"
-                placeholder="Alamat lengkap sekolah"
-              />
-            </div>
-          </div>
+        <!-- Sumber Informasi -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Mendapat informasi sekolah dari?</label>
+            <input type="text" name="info_dari"
+                placeholder="Mendapat informasi dari..."
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                focus:border-primary focus:ring-1 focus:ring-primary">
         </div>
-        <!-- STEP 6: KONFIRMASI -->
-        <div class="spmb-step-page">
-          <div class="spmb-card">
-            <h2 class="spmb-section-title">Konfirmasi Data</h2>
-            <p>
-              Proses pendaftaran PPDB Online SMA Pertiwi Medan hampir selesai.
-              Silakan periksa kembali seluruh data yang telah Anda masukkan
-              sebelum mengirim formulir.
-            </p>
-            <label class="spmb-agree">
-              <input type="radio" name="setuju_konfirmasi" required />
+    </div>
 
-              <span
-                >Pastikan semua informasi benar dan sesuai dokumen resmi.</span
-              >
+    <!-- UPLOAD DOKUMEN -->
+    <div class="mt-8 border-t border-slate-100 pt-6">
+        <h4 class="mb-4 font-bold text-slate-900">Upload Dokumen</h4>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+            <!-- PAS FOTO -->
+            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
+                <input type="file" name="foto" accept="image/*" class="hidden">
+                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">account_box</span>
+                </div>
+                <p class="text-xs font-medium text-slate-600">Pas Foto</p>
+                <p class="text-[10px] text-slate-400">Max 2MB (JPG/PNG)</p>
             </label>
-          </div>
+
+            <!-- KK -->
+            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
+                <input type="file" name="kk" accept="image/*,application/pdf" class="hidden">
+                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">folder_shared</span>
+                </div>
+                <p class="text-xs font-medium text-slate-600">Kartu Keluarga (KK)</p>
+                <p class="text-[10px] text-slate-400">Max 2MB (PDF/IMG)</p>
+            </label>
+
+            <!-- IJAZAH -->
+            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
+                <input type="file" name="ijazah" accept="image/*,application/pdf" class="hidden">
+                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">school</span>
+                </div>
+                <p class="text-xs font-medium text-slate-600">Ijazah / SKL</p>
+                <p class="text-[10px] text-slate-400">Max 2MB (PDF/IMG)</p>
+            </label>
+
+        </div>
+    </div>
+    <div class="mt-6 flex justify-between">
+    <button
+        type="button"
+        onclick="prevStep()"
+        class="rounded-lg border px-6 py-2 text-sm font-bold"
+    >
+        Kembali
+    </button>
+
+    <button
+        type="button"
+        onclick="nextStep()"
+        class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white"
+    >
+        Lanjut
+    </button>
+</div>
+
+</section>
+<!-- Alamat calon siswa -->
+    <section
+    id="step3" data-step="3"
+    class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+>
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">home_pin</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">
+            Alamat Calon Siswa
+        </h3>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <!-- Alamat -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Alamat Lengkap</label>
+            <textarea
+                name="alamat"
+                rows="3"
+                placeholder="Nama Jalan, RT/RW, Dusun"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary" required
+            ></textarea>
         </div>
 
-        <!-- BUTTONS -->
-        <div class="spmb-btns">
-        <button type="button" class="spmb-btn prev">Kembali</button>
-        <button type="button" class="spmb-btn next">Lanjut</button>
+        <!-- Provinsi -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Provinsi</label>
+            <input type="text" name="provinsi" rows="3" placeholder="Provinsi"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary" required
+            />
+        </div>
+
+        <!-- Kota -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Kabupaten / Kota</label>
+            <input type="text" name="kabupaten" rows="3" placeholder="Kota/kabupaten"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary" required
+            />
+        </div>
+
+        <!-- Kecamatan -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Kecamatan</label>
+            <input
+                type="text"
+                name="kecamatan"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary" required
+            />
+        </div>
+
+        <!-- Kode Pos -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Kode Pos</label>
+            <input
+                type="text"
+                name="kode_pos"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary" required
+            />
+        </div>
+    </div>
+    <div class="mt-6 flex justify-between">
+    <button
+        type="button"
+        onclick="prevStep()"
+        class="rounded-lg border px-6 py-2 text-sm font-bold"
+    >
+        Kembali
+    </button>
+
+    <button
+        type="button"
+        onclick="nextStep()"
+        class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white"
+    >
+        Lanjut
+    </button>
+</div>
+
+</section>
+<!-- Data Orang Tua & Wali -->
+<section
+    id="step4" data-step="4"
+    class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+>
+    <!-- Header -->
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">family_restroom</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">
+            Identitas Orang Tua &amp; Wali
+        </h3>
+    </div>
+
+    <div class="space-y-8">
+
+        <!-- Data KK -->
+        <div class="rounded-lg bg-slate-50 p-5">
+            <h4 class="mb-4 text-base font-bold text-slate-900">Data Kartu Keluarga</h4>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <input type="text" name="no_kk" placeholder="Nomor KK"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary">
+                <input type="text" name="nama_kk" placeholder="Nama Kepala Keluarga"
+                    class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary">
+            </div>
+        </div>
+
+        <!-- Ayah -->
+        <div>
+            <h4 class="mb-4 font-bold text-slate-900">Data Ayah Kandung</h4>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <input type="text" name="nama_ayah" placeholder="Nama Ayah" class="input">
+                <input type="text" name="nik_ayah" placeholder="NIK Ayah" class="input">
+                <input type="number" name="tahun_lahir_ayah" placeholder="Tahun Lahir" class="input">
+                <input type="text" name="status_ayah" placeholder="Status Ayah" class="input">
+                <select name="pekerjaan_ayah" class="input">
+                    <option value="">Pekerjaan</option>
+                    <option>PNS</option>
+                    <option>Wiraswasta</option>
+                </select>
+                <select name="penghasilan_ayah" class="input">
+                    <option value="">Penghasilan</option>
+                    <option>&lt; 2 Juta</option>
+                    <option>2 - 5 Juta</option>
+                </select>
+                <select name="pendidikan_ayah" class="input">
+                    <option value="">Pendidikan</option>
+                    <option>SMA</option>
+                    <option>S1</option>
+                </select>
+                <input type="tel" name="hp_ayah" placeholder="No HP Ayah" class="input">
+            </div>
+        </div>
+
+        <!-- Ibu -->
+        <div>
+            <h4 class="mb-4 font-bold text-slate-900">Data Ibu Kandung</h4>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <input type="text" name="nama_ibu" placeholder="Nama Ibu" class="input">
+                <input type="text" name="nik_ibu" placeholder="NIK Ibu" class="input">
+                <input type="number" name="tahun_lahir_ibu" placeholder="Tahun Lahir" class="input">
+                <input type="text" name="status_ibu" placeholder="Status Ibu" class="input">
+                <select name="pekerjaan_ibu" class="input">
+                    <option value="">Pekerjaan</option>
+                    <option>Ibu Rumah Tangga</option>
+                    <option>PNS</option>
+                </select>
+                <select name="penghasilan_ibu" class="input">
+                    <option value="">Penghasilan</option>
+                    <option>Tidak Berpenghasilan</option>
+                    <option>&lt; 2 Juta</option>
+                </select>
+                <select name="pendidikan_ibu" class="input">
+                    <option value="">Pendidikan</option>
+                    <option>SMA</option>
+                    <option>S1</option>
+                </select>
+                <input type="tel" name="hp_ibu" placeholder="No HP Ibu" class="input">
+            </div>
+        </div>
+
+        <!-- Wali -->
+        <div>
+            <h4 class="mb-4 font-bold text-slate-900">Data Wali (Jika Ada)</h4>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <input type="text" name="nama_wali" placeholder="Nama Wali" class="input">
+                <input type="text" name="nik_wali" placeholder="NIK Wali" class="input">
+                <input type="number" name="tahun_lahir_wali" placeholder="Tahun Lahir" class="input">
+                <input type="text" name="status_wali" placeholder="Status Wali" class="input">
+                <select name="pekerjaan_wali" class="input">
+                    <option value="">Pekerjaan</option>
+                    <option>PNS</option>
+                    <option>Wiraswasta</option>
+                </select>
+                <select name="penghasilan_wali" class="input">
+                    <option value="">Penghasilan</option>
+                    <option>&lt; 2 Juta</option>
+                    <option>2 - 5 Juta</option>
+                </select>
+                <select name="pendidikan_wali" class="input">
+                    <option value="">Pendidikan</option>
+                    <option>SMA</option>
+                    <option>S1</option>
+                </select>
+                <input type="tel" name="hp_wali" placeholder="No HP Wali" class="input">
+            </div>
+        </div>
+
+        <!-- Kartu Bantuan -->
+        <div class="rounded-lg border border-orange-200 bg-orange-50 p-5">
+            <h4 class="mb-4 font-bold text-orange-900">Kartu Bantuan (Jika Ada)</h4>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <input type="text" name="no_kks" placeholder="Nomor KKS" class="input">
+                <input type="text" name="no_pkh" placeholder="Nomor PKH" class="input">
+                <input type="text" name="no_kip" placeholder="Nomor KIP" class="input">
+            </div>
+        </div>
+
+    </div>
+    <div class="mt-6 flex justify-between">
+    <button
+        type="button"
+        onclick="prevStep()"
+        class="rounded-lg border px-6 py-2 text-sm font-bold"
+    >
+        Kembali
+    </button>
+
+    <button
+        type="button"
+        onclick="nextStep()"
+        class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white"
+    >
+        Lanjut
+    </button>
+</div>
+
+</section>
+<!-- data sekolah asal -->
+<section
+    id="step5" data-step="5"
+    class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+>
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">school</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">
+            Data Sekolah Asal
+        </h3>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+        <!-- Nama Sekolah -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Nama Sekolah Asal</label>
+            <input
+                type="text"
+                name="nama_sekolah"
+                placeholder="SMP / MTs ..."
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+        </div>
+
+        <!-- Jenjang -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Jenjang</label>
+            <select
+                name="jenjang_sekolah"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+                <option>SMP</option>
+                <option>MTs</option>
+                <option>Paket B</option>
+            </select>
+        </div>
+
+        <!-- Kelas -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Kelas Terakhir</label>
+            <input
+                type="text"
+                name="kelas"
+                placeholder="Contoh: IX"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+        </div>
+
+        <!-- Status Sekolah -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">Status Sekolah</label>
+            <select
+                name="status_sekolah"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+                <option>Negeri</option>
+                <option>Swasta</option>
+            </select>
+        </div>
+
+        <!-- NPSN -->
+        <div>
+            <label class="mb-2 block text-sm font-semibold">NPSN</label>
+            <input
+                type="text"
+                name="npsn"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+        </div>
+
+        <!-- Alamat Sekolah -->
+        <div class="sm:col-span-2">
+            <label class="mb-2 block text-sm font-semibold">Alamat Sekolah</label>
+            <input
+                type="text"
+                name="alamat_sekolah"
+                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+        </div>
+
+    </div>
+    <div class="mt-6 flex justify-between">
+    <button
+        type="button"
+        onclick="prevStep()"
+        class="rounded-lg border px-6 py-2 text-sm font-bold"
+    >
+        Kembali
+    </button>
+
+    <button
+        type="button"
+        onclick="nextStep()"
+        class="rounded-lg bg-primary px-6 py-2 text-sm font-bold text-white"
+    >
+        Lanjut
+    </button>
+</div>
+
+</section>
+
+
+
+<section
+    id="step6" data-step="6"
+    class="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+>
+    <div class="mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span class="material-symbols-outlined">verified</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">
+            Konfirmasi &amp; Kirim
+        </h3>
+    </div>
+
+    <!-- INFO BOX -->
+    <div class="mb-6 rounded-lg border border-green-100 bg-green-50 p-4">
+        <div class="flex gap-3">
+            <span class="material-symbols-outlined text-green-600">info</span>
+            <div class="text-sm text-green-800">
+                <p class="mb-1 font-bold">Cek Kembali Data Anda</p>
+                <p>
+                    Pastikan seluruh data yang anda masukkan sudah benar.
+                    Data yang sudah disubmit tidak dapat diubah kembali kecuali
+                    dengan menghubungi panitia PPDB.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERNYATAAN -->
+    <div class="mb-8">
+        <label class="flex cursor-pointer select-none items-start gap-3">
+            <input
+                type="checkbox"
+                name="pernyataan"
+                required
+                class="mt-1 h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary"
+            />
+            <span class="text-base font-medium text-slate-800">
+                Saya menyatakan bahwa data yang saya isikan adalah benar dan saya
+                bertanggung jawab sepenuhnya atas kebenaran data tersebut.
+            </span>
+        </label>
+    </div>
+
+    <!-- ACTION -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:justify-end">
+        <button
+            type="button"
+            class="w-full rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
+        >
+            Simpan Draft
+        </button>
 
         <button
-          type="submit"
-          class="spmb-btn kirim"
-          style="display: none;"
+            type="submit"
+            class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-8 py-3 text-sm font-bold text-white shadow-sm transition hover:opacity-90 sm:w-auto"
         >
-          Kirim Formulir
+            <span>Kirim Pendaftaran</span>
+            <span class="material-symbols-outlined text-sm">send</span>
         </button>
-      </div>
-
-
-        </div>
-        </div>
-      </form>
-      <script>
-        const nextBtns = document.querySelectorAll(".next");
-      const prevBtns = document.querySelectorAll(".prev");
-      const formSteps = document.querySelectorAll(".spmb-step-page");
-      const steps = document.querySelectorAll(".spmb-step");
-      const progressFill = document.getElementById("progress");
-      const kirimBtn = document.querySelector(".kirim");
-      let step = 0;
-
-      // Next Button
-      nextBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          if (step < formSteps.length - 1) step++;
-          updateStep();
-          window.scrollTo({ top: 500, behavior: "smooth" }); // keep UX oke
-        });
-      });
-
-      // Previous Button
-      prevBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          if (step > 0) step--;
-          updateStep();
-          window.scrollTo({ top: 500, behavior: "smooth" });
-        });
-      });
-
-      function updateStep() {
-        formSteps.forEach((f) => f.classList.remove("active"));
-        formSteps[step].classList.add("active");
-
-        steps.forEach((s, i) => {
-          if (i <= step) s.classList.add("active");
-          else s.classList.remove("active");
-        });
-
-        const progressPercent = (step / (formSteps.length - 1)) * 100;
-        if (progressFill) progressFill.style.width = progressPercent + "%";
-
-      // tombol kembali: hidden di step 0, visible di lainnya
-      prevBtns.forEach((btn) => {
-        btn.style.display = step === 0 ? "none" : "inline-block";
-      });
-
-      // tombol lanjut: visible di semua kecuali step terakhir
-      nextBtns.forEach((btn) => {
-        btn.style.display =
-          step === formSteps.length - 1 ? "none" : "inline-block";
-      });
-
-      // tombol kirim: hanya visible di step terakhir
-      kirimBtn.style.display =
-        step === formSteps.length - 1 ? "inline-block" : "none";
-            }
-
-            /* POPUP BERHASIL */
-  function showFormSuccess() {
-    const popup = document.getElementById("formSuccessOverlay");
-    popup.classList.add("show");
-
-    setTimeout(() => {
-      window.location.href = "{{ url('/pembayaran') }}";
-    }, 5500);
-  }
-      // optional: fungsi submit (contoh)
-
-      // init
-      updateStep();
-
-      // --- NAVBAR MOBILE TOGGLE ---
-      const menuToggle = document.getElementById("menuToggle");
-      const mobileMenu = document.getElementById("mobileMenu");
-      const body = document.body;
-
-      menuToggle.addEventListener("click", function () {
-        mobileMenu.classList.toggle("active");
-        body.classList.toggle("no-scroll"); // supaya tidak bisa scroll saat menu terbuka
-      });
-
-      // Tutup menu jika klik di luar area menu
-      document.addEventListener("click", function (e) {
-        if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-          mobileMenu.classList.remove("active");
-          body.classList.remove("no-scroll");
-        }
-      });
-
-      // Jalankan saat awal
-      updateStep();
-    </script>
-    </section>
-<div id="formSuccessOverlay" class="form-success-overlay">
-      <div class="form-success-box">
-        <div class="form-checkmark">
-          <div class="checkmark-circle">
-            <i class="fas fa-check"></i>
-          </div>
-        </div>
-
-        <h2 class="form-success-title">Formulir Berhasil Dikirim!</h2>
-
-        <p class="form-success-text">
-          Terima kasih telah mengisi formulir pendaftaran. Selanjutnya anda akan
-          diarahkan ke halaman pembayaran
-        </p>
-      </div>
     </div>
-    @include('layout.footer')
+</section>
+</form>
+
+</div>
+<style>
+.step-circle {
+    @apply flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-300 bg-white text-slate-400 transition-all duration-300;
+}
+
+.step-circle.active {
+    @apply border-primary bg-primary text-white shadow-lg scale-110;
+}
+
+.step-circle.done {
+    @apply border-emerald-500 bg-emerald-500 text-white;
+}
+
+.step-label {
+    @apply mt-3 text-xs font-semibold text-slate-400;
+}
+
+.step-label.active {
+    @apply text-primary;
+}
+
+.step-label.done {
+    @apply text-emerald-600;
+}
+</style>
+
+<script>
+let currentStep = 1;
+const totalSteps = 6;
+
+function showStep(step) {
+    document.querySelectorAll('section[data-step]').forEach(section => {
+        section.classList.toggle('hidden', section.dataset.step != step);
+    });
+
+    // update progress
+    document.querySelectorAll('[data-progress]').forEach(item => {
+        const circle = item.querySelector('div');
+
+        if (item.dataset.progress <= step) {
+            circle.classList.remove('border-primary','bg-white');
+            circle.classList.add('bg-primary','text-white');
+        } else {
+            circle.classList.remove('bg-primary','text-white');
+            circle.classList.add('border-primary','bg-white');
+        }
+    });
+}
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// init
+showStep(currentStep);
+</script>
+
+
+</body>
+</html>
+@include('layout.footer')

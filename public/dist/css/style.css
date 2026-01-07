@@ -1,22 +1,23 @@
-/* ====================== 1. RESET GLOBAL ====================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    font-family: "Poppins", sans-serif;
-}
+    /* ====================== 1. RESET GLOBAL ====================== */
 
-.container {
-    width: 80%;
-    margin-inline: auto;
-}
-
-@media (max-width: 992px) {
-    .container {
-        width: 90%;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        font-family: "Poppins", sans-serif;
     }
-}
+
+    .container {
+        width: 80%;
+        margin-inline: auto;
+    }
+
+    @media (max-width: 992px) {
+        .container {
+            width: 90%;
+        }
+    }
 
 /* ====== HEADER UMUM ====== */
 header {

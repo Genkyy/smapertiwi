@@ -51,4 +51,5 @@ Route::view('/hasilspmb', 'hasilspmb')->name('hasilspmb');
 Route::view('/sambutan', 'sambutan')->name('sambutan');
 Route::view('/formpendaftaran', 'formpendaftaran')->name('formpendaftaran');
 Route::view('/hasilspmb', 'hasilspmb')->name('hasilspmb');
+Route::view('/pembayaran', 'pembayaran')->name('pembayaran');
 Route::view('/eskul', 'eskul')->name('eskul');

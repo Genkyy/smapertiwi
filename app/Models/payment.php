@@ -13,7 +13,16 @@ class Payment extends Model
         'method',
         'proof',
         'status',
+        'note',
     ];
+
+    protected $casts = [
+        'status' => 'string',
+    ];
+public function payments()
+{
+    return $this->hasMany(Payment::class);
+}
 
     public function student()
     {
