@@ -159,7 +159,7 @@
         <!-- Nama -->
         <div class="sm:col-span-2">
             <label class="mb-2 block text-sm font-semibold">Nama Lengkap</label>
-            <input type="text" name="nama_lengkap" placeholder="Sesuai Akta Kelahiran"
+            <input type="text" name="nama_lengkap" placeholder="Masukkan Nama Sesuai Akta Kelahiran"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                 focus:border-primary focus:ring-1 focus:ring-primary" required>
         </div>
@@ -183,7 +183,7 @@
         <!-- Tempat Lahir -->
         <div>
             <label class="mb-2 block text-sm font-semibold">Tempat Lahir</label>
-            <input type="text" name="tempat_lahir"
+            <input type="text" name="tempat_lahir" placeholder="Masukkan Tempat Lahir"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                 focus:border-primary focus:ring-1 focus:ring-primary">
         </div>
@@ -214,6 +214,7 @@
             <select name="agama"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                 focus:border-primary focus:ring-1 focus:ring-primary">
+                <option value="">Pilih Agama</option>
                 <option>Islam</option>
                 <option>Kristen</option>
                 <option>Katolik</option>
@@ -249,10 +250,19 @@
         <!-- Minat Ekskul -->
         <div class="sm:col-span-2">
             <label class="mb-2 block text-sm font-semibold">Minat Ekstrakurikuler</label>
-            <input type="text" name="ekskul"
-                placeholder="Contoh: Basket, Robotik, Paduan Suara"
+            <select name="ekskul"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                 focus:border-primary focus:ring-1 focus:ring-primary">
+                <option value="">Pilih Ekskul</option>
+                <option>Basket</option>
+                <option>E-Sport</option>
+                <option>Futsal</option>
+                <option>Musik</option>
+                <option>Multimedia</option>
+                <option>pramuka</option>
+                <option>Tari</option>
+                <option>Tahfidz</option>
+            </select>
         </div>
         <!-- Sumber Informasi -->
         <div class="sm:col-span-2">
@@ -369,9 +379,7 @@
         <!-- Kecamatan -->
         <div>
             <label class="mb-2 block text-sm font-semibold">Kecamatan</label>
-            <input
-                type="text"
-                name="kecamatan"
+            <input type="text" name="kecamatan" placeholder="Kecamatan"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                        focus:border-primary focus:ring-1 focus:ring-primary" required
             />
@@ -380,9 +388,7 @@
         <!-- Kode Pos -->
         <div>
             <label class="mb-2 block text-sm font-semibold">Kode Pos</label>
-            <input
-                type="text"
-                name="kode_pos"
+            <input type="text" name="kode_pos" placeholder="Kode Pos"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                        focus:border-primary focus:ring-1 focus:ring-primary" required
             />
@@ -439,7 +445,7 @@
         <div>
             <h4 class="mb-4 font-bold text-slate-900">Data Ayah Kandung</h4>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <input type="text" name="nama_ayah" placeholder="Nama Ayah" class="input">
+                <input type="text" name="nama_ayah" placeholder="Nama Ayah" class="input" required>
                 <input type="text" name="nik_ayah" placeholder="NIK Ayah" class="input">
                 <input type="number" name="tahun_lahir_ayah" placeholder="Tahun Lahir" class="input">
                 <input type="text" name="status_ayah" placeholder="Status Ayah" class="input">
@@ -466,7 +472,7 @@
         <div>
             <h4 class="mb-4 font-bold text-slate-900">Data Ibu Kandung</h4>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <input type="text" name="nama_ibu" placeholder="Nama Ibu" class="input">
+                <input type="text" name="nama_ibu" placeholder="Nama Ibu" class="input" required>
                 <input type="text" name="nik_ibu" placeholder="NIK Ibu" class="input">
                 <input type="number" name="tahun_lahir_ibu" placeholder="Tahun Lahir" class="input">
                 <input type="text" name="status_ibu" placeholder="Status Ibu" class="input">
@@ -616,9 +622,7 @@
         <!-- NPSN -->
         <div>
             <label class="mb-2 block text-sm font-semibold">NPSN</label>
-            <input
-                type="text"
-                name="npsn"
+            <input type="text" name="npsn" placeholder="Nomor Pokok Sekolah Nasional"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                        focus:border-primary focus:ring-1 focus:ring-primary"
             />
@@ -627,10 +631,7 @@
         <!-- Alamat Sekolah -->
         <div class="sm:col-span-2">
             <label class="mb-2 block text-sm font-semibold">Alamat Sekolah</label>
-            <input
-                type="text"
-                name="alamat_sekolah"
-                class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
+            <input type="text" name="alamat_sekolah" placeholder="Masukkan Alamat Lengkap Sekolah" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                        focus:border-primary focus:ring-1 focus:ring-primary"
             />
         </div>
@@ -705,11 +706,12 @@
     <!-- ACTION -->
     <div class="flex flex-col gap-4 sm:flex-row sm:justify-end">
         <button
-            type="button"
-            class="w-full rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
-        >
-            Simpan Draft
-        </button>
+        type="button"
+        onclick="prevStep()"
+        class="rounded-lg border px-6 py-2 text-sm font-bold"
+    >
+        Kembali
+    </button>
 
         <button
             type="submit"
@@ -747,6 +749,13 @@
 .step-label.done {
     @apply text-emerald-600;
 }
+.input {
+    @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm
+           focus:border-primary focus:ring-1 focus:ring-primary;
+}
+.input:invalid {
+    @apply border-red-500;
+}
 </style>
 
 <script>
@@ -754,22 +763,57 @@ let currentStep = 1;
 const totalSteps = 6;
 
 function showStep(step) {
+    // section
     document.querySelectorAll('section[data-step]').forEach(section => {
         section.classList.toggle('hidden', section.dataset.step != step);
     });
 
-    // update progress
+    // step progress
     document.querySelectorAll('[data-progress]').forEach(item => {
-        const circle = item.querySelector('div');
+        const stepNum = Number(item.dataset.progress);
+        const circle = item.querySelector('.step-circle');
+        const label  = item.querySelector('.step-label');
 
-        if (item.dataset.progress <= step) {
-            circle.classList.remove('border-primary','bg-white');
-            circle.classList.add('bg-primary','text-white');
-        } else {
-            circle.classList.remove('bg-primary','text-white');
-            circle.classList.add('border-primary','bg-white');
+        circle.classList.remove('active', 'done');
+        label.classList.remove('active', 'done');
+
+        if (stepNum < step) {
+            circle.classList.add('done');
+            circle.innerHTML = '<span class="material-symbols-outlined">check</span>';
+            label.classList.add('done');
+        } 
+        else if (stepNum === step) {
+            circle.classList.add('active');
+            label.classList.add('active');
         }
     });
+
+    // progress line
+    const percent = ((step - 1) / (totalSteps - 1)) * 100;
+    document.getElementById('progressLine').style.width = percent + '%';
+}
+function validateStep(step) {
+    const section = document.querySelector(`section[data-step="${step}"]`);
+    const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+
+    for (let input of inputs) {
+        if (!input.value.trim()) {
+            input.classList.add('border-red-500');
+            input.focus();
+            return false;
+        }
+        input.classList.remove('border-red-500');
+    }
+    return true;
+}
+
+function nextStep() {
+    if (!validateStep(currentStep)) return;
+    if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 function nextStep() {
