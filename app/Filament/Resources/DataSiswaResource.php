@@ -9,6 +9,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SiswaExport;
+use Filament\Tables\Actions\Action;
+
+
 
 class DataSiswaResource extends Resource
 {
@@ -197,13 +202,23 @@ class DataSiswaResource extends Resource
                         'danger' => 'nonaktif',
                     ]),
             ])
+            
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
+                Action::make('export')
+        ->label('Export Excel')
+        ->icon('heroicon-o-arrow-down-tray')
+        ->color('success')
+        ->action(fn () => Excel::download(
+            new SiswaExport,
+            'data-siswa.xlsx'
+        )),
             ]);
+            
     }
 
     /**

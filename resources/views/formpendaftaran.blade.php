@@ -597,13 +597,15 @@
         <!-- Kelas -->
         <div>
             <label class="mb-2 block text-sm font-semibold">Kelas Terakhir</label>
-            <input
-                type="text"
+            <select
                 name="kelas"
-                placeholder="Contoh: IX"
                 class="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm
                        focus:border-primary focus:ring-1 focus:ring-primary"
-            />
+            >
+                <option>X</option>
+                <option>XI</option>
+                <option>XII</option>
+            </select>
         </div>
 
         <!-- Status Sekolah -->

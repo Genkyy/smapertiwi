@@ -2,7 +2,8 @@
 
 namespace App\Filament\Clusters;
 
-use App\Filament\Clusters\Akademik\Resources\NilaiXAResource;
+use App\Filament\Clusters\Akademik\Resources\NilaiXResource;
+use App\Filament\Clusters\AkademikCluster\Resources\KelasXIResource;
 use Filament\Clusters\Cluster;
 
 class AkademikCluster extends Cluster
@@ -14,7 +15,8 @@ class AkademikCluster extends Cluster
     public static function getResources(): array
     {
         return [
-            NilaiXAResource::class,
+            NilaiXResource::class,
+            NilaiXIResource::class,
         ];
     }
 }

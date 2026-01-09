@@ -7,49 +7,38 @@ use App\Models\NilaiAkademik;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Resources\Resource;
+use Filament\Pages\SubNavigationPosition;
+use Filament\Navigation\NavigationItem;
+
 
 class AkademikNilaiResource extends Resource
 {
     protected static ?string $model = NilaiAkademik::class;
 
     protected static ?string $navigationGroup = 'Manajemen Siswa';
-    protected static ?string $navigationParentItem = 'Data Siswa';
     protected static ?string $navigationLabel = 'Akademik Nilai';
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    public static function form(Forms\Form $form): Forms\Form
-    {
-        return $form->schema([
-            Forms\Components\Select::make('student_id')
-                ->relationship('siswa', 'nama_lengkap')
-                ->searchable()
-                ->required(),
+    protected static SubNavigationPosition $subNavigationPosition =
+        SubNavigationPosition::Start;
 
-            Forms\Components\TextInput::make('mapel')->required(),
-            Forms\Components\TextInput::make('nilai')->numeric()->required(),
-        ]);
-    }
 
-    public static function table(Tables\Table $table): Tables\Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('siswa.nama_lengkap')->label('Siswa'),
-                Tables\Columns\TextColumn::make('mapel'),
-                Tables\Columns\TextColumn::make('nilai'),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ]);
-    }
-
-    public static function getPages(): array
+public static function getSubNavigation(): array
     {
         return [
-            'index' => Pages\ListAkademikNilais::route('/'),
-            'create' => Pages\CreateAkademikNilai::route('/create'),
-            'edit' => Pages\EditAkademikNilai::route('/{record}/edit'),
+            NavigationItem::make('XA')->url(static::getUrl('index', ['kelas' => 'XA'])),
+            NavigationItem::make('XB')->url(static::getUrl('index', ['kelas' => 'XB'])),
+            NavigationItem::make('XI')->url(static::getUrl('index', ['kelas' => 'XI'])),
+            NavigationItem::make('XII')->url(static::getUrl('index', ['kelas' => 'XII'])),
         ];
     }
+
+public static function getPages(): array
+{
+    return [
+        'index' => Pages\ListAkademikNilais::route('/'),
+        'create' => Pages\CreateAkademikNilai::route('/create'),
+        'edit' => Pages\EditAkademikNilai::route('/{record}/edit'),
+    ];
+}
 }
