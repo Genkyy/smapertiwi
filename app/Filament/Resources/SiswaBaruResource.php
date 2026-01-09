@@ -17,6 +17,16 @@ class SiswaBaruResource extends Resource
     protected static ?string $navigationGroup = 'Pendaftaran';
     protected static ?string $navigationLabel = 'Siswa Baru';
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
+    
+    public static function getNavigationBadge(): ?string
+{
+    return (string) static::getModel()::count();
+}
+public static function getNavigationBadgeColor(): ?string
+{
+    return static::getModel()::count() > 10 ? 'warning' : 'primary';
+}
+
 
     public static function form(Form $form): Form
     {

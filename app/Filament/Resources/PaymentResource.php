@@ -19,6 +19,14 @@ class PaymentResource extends Resource
     protected static ?string $navigationLabel = 'Pembayaran';
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?int $navigationSort = 2;
+    public static function getNavigationBadge(): ?string
+{
+    return (string) static::getModel()::count();
+}
+public static function getNavigationBadgeColor(): ?string
+{
+    return static::getModel()::count() > 10 ? 'warning' : 'info';
+}
 
     public static function form(Form $form): Form
     {

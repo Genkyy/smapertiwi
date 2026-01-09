@@ -12,7 +12,7 @@ class SiswaExport implements FromQuery, WithHeadings, WithMapping
 {
     public function query()
     {
-        return Siswa::query();
+        return Student::query();
     }
 
     public function headings(): array
@@ -26,16 +26,15 @@ class SiswaExport implements FromQuery, WithHeadings, WithMapping
         ];
     }
 
-    public function map($siswa): array
+    public function map($student): array
     {
         return [
-            $siswa->nis,
-            $siswa->nama,
-            $siswa->kelas,
-            $siswa->jenis_kelamin,
-            $siswa->tanggal_lahir?->format('d-m-Y'),
+            $student->nisn,
+            $student->nama_lengkap,
+            $student->kelas,
+            $student->jenis_kelamin,
+            $student->tanggal_lahir,
         ];
     }
 
-    
 }

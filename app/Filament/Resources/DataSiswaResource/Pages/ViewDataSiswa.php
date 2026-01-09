@@ -10,6 +10,7 @@ class ViewDataSiswa extends ViewRecord
     protected static string $resource = DataSiswaResource::class;
 
     public static function getNavigationLabel(): string
+    
     {
         return 'Data Siswa';
     }
