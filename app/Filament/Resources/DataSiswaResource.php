@@ -9,11 +9,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SiswaExport;
-use Filament\Tables\Actions\Action;
-
-
 
 class DataSiswaResource extends Resource
 {
@@ -23,212 +21,97 @@ class DataSiswaResource extends Resource
     protected static ?string $navigationLabel = 'Data Siswa';
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-        public static function getNavigationBadge(): ?string
-{
-    return (string) static::getModel()::count();
-}
-public static function getNavigationBadgeColor(): ?string
-{
-    return static::getModel()::count() > 10 ? 'warning' : 'success';
-}
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::count();
+    }
 
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'success';
+    }
 
     /**
-     * FORM (CREATE & EDIT)
+     * FORM
      */
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
+    {
+        return $form->schema([
+            Forms\Components\Section::make('Data Siswa')->schema([
+                Forms\Components\TextInput::make('nama_lengkap')->required(),
+                Forms\Components\TextInput::make('nisn')->required(),
+                Forms\Components\TextInput::make('nik')->required(),
 
-            /* ================= DATA SISWA ================= */
-            Forms\Components\Section::make('Data Siswa')
-                ->schema([
-                    Forms\Components\TextInput::make('nama_lengkap')
-                        ->required(),
-
-                    Forms\Components\TextInput::make('nisn')
-                        ->required(),
-
-                    Forms\Components\TextInput::make('nik')
-                        ->required(),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('tempat_lahir')
-                            ->required(),
-                        Forms\Components\DatePicker::make('tanggal_lahir')
-                            ->required(),
-                    ]),
-
-                    Forms\Components\Select::make('jenis_kelamin')
-                        ->options([
-                            'Laki-laki' => 'Laki-laki',
-                            'Perempuan' => 'Perempuan',
-                        ])
-                        ->required(),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\Select::make('agama')
-                            ->options([
-                                'Islam' => 'Islam',
-                                'Kristen' => 'Kristen',
-                                'Katolik' => 'Katolik',
-                                'Hindu' => 'Hindu',
-                                'Buddha' => 'Buddha',
-                                'Konghucu' => 'Konghucu',
-                            ])
-                            ->required(),
-
-                        Forms\Components\Select::make('jurusan')
-                            ->options([
-                                'IPA' => 'IPA',
-                                'IPS' => 'IPS',
-                            ])
-                            ->required(),
-                    ]),
-
-                    Forms\Components\TextInput::make('no_hp')
-                        ->required(),
-
-                    Forms\Components\Select::make('ekskul')
-                        ->options([
-                            'Futsal' => 'Futsal',
-                            'Basket' => 'Basket',
-                            'Musik' => 'Musik',
-                            'Pramuka' => 'Pramuka',
-                            'Tari' => 'Tari',
-                            'Tahfidz' => 'Tahfidz',
-                            'Multimedia' => 'Multimedia',
-                            'E-Sport' => 'E-Sport',
-                        ]),
-
-                    Forms\Components\TextInput::make('info_dari'),
+                Forms\Components\Grid::make(2)->schema([
+                    Forms\Components\TextInput::make('tempat_lahir')->required(),
+                    Forms\Components\DatePicker::make('tanggal_lahir')->required(),
                 ]),
 
-            /* ================= ALAMAT ================= */
-            Forms\Components\Section::make('Alamat')
-                ->schema([
-                    Forms\Components\Textarea::make('alamat')->required(),
+                Forms\Components\Select::make('jenis_kelamin')
+                    ->options([
+                        'Laki-laki' => 'Laki-laki',
+                        'Perempuan' => 'Perempuan',
+                    ])
+                    ->required(),
 
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('kecamatan')->required(),
-                        Forms\Components\TextInput::make('kabupaten')->required(),
-                    ]),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('provinsi')->required(),
-                        Forms\Components\TextInput::make('kode_pos')->required(),
-                    ]),
-                ]),
-
-            /* ================= ORANG TUA ================= */
-            Forms\Components\Section::make('Data Orang Tua')
-                ->schema([
-                    Forms\Components\TextInput::make('no_kk')->required(),
-                    Forms\Components\TextInput::make('nama_kk')->required(),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('nama_ayah')->required(),
-                        Forms\Components\TextInput::make('nik_ayah')->required(),
-                    ]),
-
-                    Forms\Components\TextInput::make('hp_ayah')->required(),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\TextInput::make('nama_ibu')->required(),
-                        Forms\Components\TextInput::make('nik_ibu')->required(),
-                    ]),
-
-                    Forms\Components\TextInput::make('hp_ibu')->required(),
-                ]),
-
-            /* ================= SEKOLAH ASAL ================= */
-            Forms\Components\Section::make('Sekolah Asal')
-                ->schema([
-                    Forms\Components\TextInput::make('nama_sekolah')->required(),
-
-                    Forms\Components\Grid::make(2)->schema([
-                        Forms\Components\Select::make('jenjang_sekolah')
-                            ->options([
-                                'SMP' => 'SMP',
-                                'MTS' => 'MTS',
-                            ])
-                            ->required(),
-
-                        Forms\Components\Select::make('status_sekolah')
-                            ->options([
-                                'Negeri' => 'Negeri',
-                                'Swasta' => 'Swasta',
-                            ])
-                            ->required(),
-                    ]),
-
-                    Forms\Components\TextInput::make('kelas')
-                        ->label('Kelas Terakhir'),
-
-                    Forms\Components\TextInput::make('npsn'),
-                    Forms\Components\Textarea::make('alamat_sekolah'),
-                ]),
-
-            /* ================= DOKUMEN ================= */
-            Forms\Components\Section::make('Dokumen')
-                ->schema([
-                    Forms\Components\FileUpload::make('foto')
-                        ->image(),
-
-                    Forms\Components\FileUpload::make('kk'),
-                    Forms\Components\FileUpload::make('ijazah'),
-                ]),
+                Forms\Components\Select::make('jurusan')
+                    ->options([
+                        'IPA' => 'IPA',
+                        'IPS' => 'IPS',
+                    ])
+                    ->required(),
+            ]),
         ]);
-}
-
+    }
 
     /**
-     * TABLE (LIST DATA)
+     * TABLE
      */
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Student::query()) // 🔥 PENTING
+            ->query(Student::query())
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('nama_lengkap')
-                    ->label('Nama Lengkap')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('nisn')
-                    ->label('NISN'),
-
-                Tables\Columns\TextColumn::make('jurusan')
-                    ->label('Jurusan'),
-
+                Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('nama_lengkap')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('nisn'),
+                Tables\Columns\TextColumn::make('jurusan'),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'success' => 'aktif',
                         'danger' => 'nonaktif',
                     ]),
             ])
-            
+
+            /**
+             * ACTION PER BARIS
+             */
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
+                Action::make('cv')
+                    ->label('CV')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->url(fn (Student $record) => route('siswa.cv', $record))
+                    ->openUrlInNewTab(),
             ])
+
+            /**
+             * HEADER ACTION (ATAS)
+             */
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Action::make('export')
-        ->label('Export Excel')
-        ->icon('heroicon-o-arrow-down-tray')
-        ->color('success')
-        ->action(fn () => Excel::download(
-            new SiswaExport,
-            'data-siswa.xlsx'
-        )),
+                Tables\Actions\CreateAction::make()
+                    ->label('Tambah Siswa'),
+
+                Action::make('export_excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(fn () => Excel::download(new SiswaExport, 'data-siswa.xlsx')),
             ]);
-            
+
     }
 
     /**

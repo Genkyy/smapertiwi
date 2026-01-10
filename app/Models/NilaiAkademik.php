@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NilaiAkademik extends Model
 {
-    protected $table = 'nilai_akademik';
+    protected $table = 'nilai_rapor';
     protected $fillable = [
         'student_id',
         'mapel',

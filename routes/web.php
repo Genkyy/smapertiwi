@@ -6,6 +6,10 @@ use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PdfSiswaController;
+use App\Http\Controllers\PdfRaporSiswaController;
+
+
 
 
 /*
@@ -39,6 +43,13 @@ Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
 
 Route::post('/pembayaran/{student}', [PaymentController::class, 'store'])
     ->name('payment.store');
+
+    Route::get('/siswa/{student}/cv', [PdfSiswaController::class, 'cv'])
+    ->name('siswa.cv');
+
+Route::get('/rapor/{student}/{rapor}', [PdfRaporSiswaController::class, 'rapor'])
+    ->name('siswa.rapor');
+
 // Halaman lainnya
 Route::view('/galeri', 'galeri')->name('galeri');
 Route::view('/fasilitas', 'fasilitas')->name('fasilitas');

@@ -9,4 +9,12 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateKelasX extends CreateRecord
 {
     protected static string $resource = KelasXResource::class;
-}
+
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'kelasx_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
+    }

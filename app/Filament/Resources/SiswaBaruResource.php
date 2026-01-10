@@ -182,12 +182,18 @@ public static function getNavigationBadgeColor(): ?string
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nama_lengkap')->searchable()->sortable(),
+                Tables\Columns\ImageColumn::make('foto')
+                    ->label('Foto Siswa')
+                    ->disk('public')
+                    ->height(80)
+                    ->visibility('private'),
                 Tables\Columns\TextColumn::make('kelas'),
                 Tables\Columns\TextColumn::make('jurusan')
                     ->colors([
                         'primary' => 'IPA',
                         'success' => 'IPS',
                     ]),
+                    
                 Tables\Columns\BadgeColumn::make('status')
                 ->colors([
                     'warning' => 'pending',

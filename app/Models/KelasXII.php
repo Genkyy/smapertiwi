@@ -6,15 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class KelasXII extends Model
 {
-    protected $table = 'nilai_akademik';
+    protected $table = 'nilai_rapor';
+
     protected $fillable = [
         'student_id',
-        'mapel',
-        'nilai',
+        'semester',
+        'tahun_ajaran',
+
+        'pai','ppkn','bahasa_indonesia','matematika',
+        'bahasa_inggris','sejarah','informatika','pjok',
+
+        'pramuka','osis','ekskul',
+
+        'disiplin','tanggung_jawab','sopan_santun',
+
+        'sakit','izin','alpha',
     ];
 
-    public function siswa()
+    public function student()
     {
-        return $this->belongsTo(Student::class, 'student_id');
+        return $this->belongsTo(Student::class);
     }
 }
