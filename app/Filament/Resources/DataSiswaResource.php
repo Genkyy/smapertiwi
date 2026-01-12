@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SiswaExport;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class DataSiswaResource extends Resource
 {
@@ -21,19 +23,41 @@ class DataSiswaResource extends Resource
     protected static ?string $navigationLabel = 'Data Siswa';
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::count();
-    }
 
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return static::getModel()::count() > 10 ? 'warning' : 'success';
-    }
+public static function getNavigationBadge(): ?string
+{
+    return (string) static::getModel()
+        ::whereIn('status', [
+            'aktif',
+            'lulus',
+            'nonaktif',
+        ])
+        ->count();
+}
 
-    /**
-     * FORM
-     */
+public static function getNavigationBadgeColor(): ?string
+{
+    $count = static::getModel()
+        ::whereIn('status', [
+            'aktif',
+            'lulus',
+            'nonaktif',
+        ])
+        ->count();
+
+    return $count > 10 ? 'warning' : 'primary';
+}
+
+public static function getEloquentQuery(): Builder
+{
+    return parent::getEloquentQuery()
+        ->whereIn('status', [
+            'aktif',
+            'lulus',
+            'nonaktif',
+        ]);
+}
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -60,6 +84,16 @@ class DataSiswaResource extends Resource
                         'IPS' => 'IPS',
                     ])
                     ->required(),
+
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'aktif' => 'Aktif',
+                        'nonaktif' => 'Nonaktif',
+                        'lulus' => 'Lulus',
+                        'baru' => 'Baru',
+                    ])
+                    ->required(),
+
             ]),
         ]);
     }
@@ -70,16 +104,27 @@ class DataSiswaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Student::query())
+        ->query(
+            Student::query()->whereIn('status', [
+                'aktif',
+                'lulus',
+                'nonaktif',
+            ])
+        )
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('nama_lengkap')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('foto')
+                    ->label('Foto')
+                    ->formatStateUsing(fn ($state) => $state ? '<img src="' . asset('storage/' . $state) . '" alt="Foto" class="w-16 h-16 object-cover rounded-full">' : '')
+                    ->html(),
                 Tables\Columns\TextColumn::make('nisn'),
-                Tables\Columns\TextColumn::make('jurusan'),
+                Tables\Columns\TextColumn::make('jenis_kelamin')->sortable(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'success' => 'aktif',
                         'danger' => 'nonaktif',
+                        'warning' => 'lulus',
+                        'info' => 'baru',
                     ]),
             ])
 

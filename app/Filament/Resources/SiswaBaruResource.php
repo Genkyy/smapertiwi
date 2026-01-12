@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class SiswaBaruResource extends Resource
 {
@@ -17,16 +19,25 @@ class SiswaBaruResource extends Resource
     protected static ?string $navigationGroup = 'Pendaftaran';
     protected static ?string $navigationLabel = 'Siswa Baru';
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
+
     
     public static function getNavigationBadge(): ?string
 {
-    return (string) static::getModel()::count();
+    return (string) static::getModel()::where('status', 'baru')->count();
+
 }
 public static function getNavigationBadgeColor(): ?string
 {
-    return static::getModel()::count() > 10 ? 'warning' : 'primary';
-}
+    return static::getModel()
+    ::where('status', 'baru')
+    ->count() > 10 ? 'warning' : 'primary';
 
+}
+public static function getEloquentQuery(): Builder
+{
+    return parent::getEloquentQuery()
+        ->where('status', 'baru');
+}
 
     public static function form(Form $form): Form
     {
@@ -194,7 +205,8 @@ public static function getNavigationBadgeColor(): ?string
                         'success' => 'IPS',
                     ]),
                     
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\BadgeColumn::make('payments.status')
+                ->label('Status pembayaran')
                 ->colors([
                     'warning' => 'pending',
                     'info' => 'verifikasi',

@@ -101,7 +101,7 @@ class PendaftaranController extends Controller
         $data['ijazah'] = $request->file('ijazah')->store('ijazah', 'public');
     }
 
-    $data['status'] = 'pending';
+    $data['status'] = 'baru';
 
     $student = Student::create($data);
 

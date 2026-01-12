@@ -87,10 +87,14 @@ return new class extends Migration
     $table->string('ijazah')->nullable();
 
     // ================= STATUS =================
-    $table->enum('status', ['pending', 'verifikasi', 'diterima', 'ditolak'])
-        ->default('pending');
+    $table->enum('status', [
+        'baru',
+        'aktif',
+        'lulus',
+        'nonaktif',
+    ])->default('baru')->after('status');
 
-    $table->timestamps();
+    $table->timestamps(); 
 });
 
 

@@ -281,35 +281,69 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
             <!-- PAS FOTO -->
-            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
-                <input type="file" name="foto" accept="image/*" class="hidden">
+            <label
+                class="group relative flex cursor-pointer flex-col items-center justify-center
+                rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition
+                hover:border-primary hover:bg-blue-50 upload-box">
+
+                <!-- BADGE CHECK -->
+                <span class="upload-check absolute top-2 right-2 hidden
+                    rounded-full bg-green-500 p-1 text-white text-xs">
+                    ✓
+                </span>
+
+                <input type="file" name="foto" accept="image/*" class="hidden upload-input">
+
                 <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">account_box</span>
+                    <span class="material-symbols-outlined text-slate-500">account_box</span>
                 </div>
-                <p class="text-xs font-medium text-slate-600">Pas Foto</p>
+
+                <p class="text-xs font-medium text-slate-600 upload-text">Pas Foto</p>
                 <p class="text-[10px] text-slate-400">Max 2MB (JPG/PNG)</p>
             </label>
-
             <!-- KK -->
-            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
-                <input type="file" name="kk" accept="image/*,application/pdf" class="hidden">
+            <label
+                class="group relative flex cursor-pointer flex-col items-center justify-center
+                rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition
+                hover:border-primary hover:bg-blue-50 upload-box">
+
+                <!-- BADGE CHECK -->
+                <span class="upload-check absolute top-2 right-2 hidden
+                    rounded-full bg-green-500 p-1 text-white text-xs">
+                    ✓
+                </span>
+
+                <input type="file" name="kk" accept="image/*,application/pdf" class="hidden upload-input">
+
                 <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">folder_shared</span>
+                    <span class="material-symbols-outlined text-slate-500">folder_shared</span>
                 </div>
-                <p class="text-xs font-medium text-slate-600">Kartu Keluarga (KK)</p>
+
+                <p class="text-xs font-medium text-slate-600 upload-text">Kartu Keluarga (KK)</p>
                 <p class="text-[10px] text-slate-400">Max 2MB (PDF/IMG)</p>
             </label>
 
             <!-- IJAZAH -->
-            <label class="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-primary hover:bg-blue-50">
-                <input type="file" name="ijazah" accept="image/*,application/pdf" class="hidden">
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
-                    <span class="material-symbols-outlined text-slate-500 group-hover:text-primary">school</span>
-                </div>
-                <p class="text-xs font-medium text-slate-600">Ijazah / SKL</p>
-                <p class="text-[10px] text-slate-400">Max 2MB (PDF/IMG)</p>
-            </label>
+            <label
+            class="group relative flex cursor-pointer flex-col items-center justify-center
+            rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition
+            hover:border-primary hover:bg-blue-50 upload-box">
 
+            <!-- BADGE CHECK -->
+            <span class="upload-check absolute top-2 right-2 hidden
+                rounded-full bg-green-500 p-1 text-white text-xs">
+                ✓
+            </span>
+
+            <input type="file" name="ijazah" accept="image/*,application/pdf" class="hidden upload-input">
+
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm">
+                <span class="material-symbols-outlined text-slate-500">school</span>
+            </div>
+
+            <p class="text-xs font-medium text-slate-600 upload-text">Ijazah / SKL</p>
+            <p class="text-[10px] text-slate-400">Max 2MB (PDF/IMG)</p>
+        </label>
         </div>
     </div>
     <div class="mt-6 flex justify-between">
@@ -764,13 +798,15 @@
 let currentStep = 1;
 const totalSteps = 6;
 
+/* =======================
+   SHOW STEP
+======================= */
 function showStep(step) {
-    // section
     document.querySelectorAll('section[data-step]').forEach(section => {
-        section.classList.toggle('hidden', section.dataset.step != step);
+        section.classList.toggle('hidden', Number(section.dataset.step) !== step);
     });
 
-    // step progress
+    // progress
     document.querySelectorAll('[data-progress]').forEach(item => {
         const stepNum = Number(item.dataset.progress);
         const circle = item.querySelector('.step-circle');
@@ -783,8 +819,7 @@ function showStep(step) {
             circle.classList.add('done');
             circle.innerHTML = '<span class="material-symbols-outlined">check</span>';
             label.classList.add('done');
-        } 
-        else if (stepNum === step) {
+        } else if (stepNum === step) {
             circle.classList.add('active');
             label.classList.add('active');
         }
@@ -794,31 +829,50 @@ function showStep(step) {
     const percent = ((step - 1) / (totalSteps - 1)) * 100;
     document.getElementById('progressLine').style.width = percent + '%';
 }
+
+/* =======================
+   VALIDATION PER STEP
+======================= */
 function validateStep(step) {
     const section = document.querySelector(`section[data-step="${step}"]`);
-    const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+    let valid = true;
 
-    for (let input of inputs) {
-        if (!input.value.trim()) {
-            input.classList.add('border-red-500');
-            input.focus();
-            return false;
+    const fields = section.querySelectorAll(
+        'input[required], select[required], textarea[required]'
+    );
+
+    fields.forEach(field => {
+        field.classList.remove('border-red-500');
+
+        if (field.type === 'radio') {
+            const checked = section.querySelector(`input[name="${field.name}"]:checked`);
+            if (!checked) valid = false;
         }
-        input.classList.remove('border-red-500');
-    }
-    return true;
+        else if (field.type === 'checkbox') {
+            if (!field.checked) valid = false;
+        }
+        else if (field.type === 'file') {
+            if (field.files.length === 0) valid = false;
+        }
+        else {
+            if (!field.value.trim()) valid = false;
+        }
+
+        if (!valid) field.classList.add('border-red-500');
+    });
+
+    return valid;
 }
 
+/* =======================
+   NAVIGATION
+======================= */
 function nextStep() {
-    if (!validateStep(currentStep)) return;
-    if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!validateStep(currentStep)) {
+        alert('Lengkapi semua data sebelum melanjutkan.');
+        return;
     }
-}
 
-function nextStep() {
     if (currentStep < totalSteps) {
         currentStep++;
         showStep(currentStep);
@@ -834,9 +888,25 @@ function prevStep() {
     }
 }
 
-// init
+/* =======================
+   UPLOAD INDICATOR
+======================= */
+document.querySelectorAll('.upload-input').forEach(input => {
+    input.addEventListener('change', function () {
+        if (this.files.length > 0) {
+            const box = this.closest('.upload-box');
+            box.classList.remove('border-slate-300');
+            box.classList.add('border-green-500', 'bg-green-50');
+            box.querySelector('.upload-check').classList.remove('hidden');
+            box.querySelector('.upload-text').textContent = 'Sudah diupload';
+        }
+    });
+});
+
+/* INIT */
 showStep(currentStep);
 </script>
+
 
 
 </body>

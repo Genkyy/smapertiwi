@@ -98,7 +98,7 @@ public static function getNavigationBadgeColor(): ?string
                         $record->update(['status' => 'approved']);
 
                         if ($record->student) {
-                            $record->student->update(['status' => 'verifikasi']);
+                            $record->student->update(['payment.status' => 'verifikasi']);
                         }
 
                         Notification::make()
