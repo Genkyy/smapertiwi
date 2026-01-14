@@ -94,6 +94,11 @@ return new class extends Migration
         'nonaktif',
     ])->default('baru')->after('status');
 
+    $table->enum('kategori', [
+        'A',
+        'B',
+    ])->default('A')->after('status');
+
     $table->timestamps(); 
 });
 

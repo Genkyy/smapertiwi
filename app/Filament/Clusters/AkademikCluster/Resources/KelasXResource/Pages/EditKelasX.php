@@ -10,6 +10,14 @@ class EditKelasX extends EditRecord
 {
     protected static string $resource = KelasXResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'kelasx_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
+
     protected function getHeaderActions(): array
     {
         return [

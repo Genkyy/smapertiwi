@@ -21,7 +21,7 @@ class DataSiswaResource extends Resource
 
     protected static ?string $navigationGroup = 'Manajemen Siswa';
     protected static ?string $navigationLabel = 'Data Siswa';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
 
 public static function getNavigationBadge(): ?string

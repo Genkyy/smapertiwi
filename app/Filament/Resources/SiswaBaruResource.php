@@ -30,7 +30,7 @@ public static function getNavigationBadgeColor(): ?string
 {
     return static::getModel()
     ::where('status', 'baru')
-    ->count() > 10 ? 'warning' : 'primary';
+    ->count() > 10 ? 'success' : 'success';
 
 }
 public static function getEloquentQuery(): Builder

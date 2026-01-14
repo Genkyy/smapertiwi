@@ -11,6 +11,14 @@ class EditSection extends EditRecord
 {
     protected static string $resource = SectionResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'section_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
+
     protected function getActions(): array
     {
         return [

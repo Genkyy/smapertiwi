@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action;
 
 class KelasXIResource extends Resource
 {
@@ -21,6 +22,33 @@ class KelasXIResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $cluster = AkademikCluster::class;
+
+    protected static ?string $navigationLabel = 'Kelas XI';
+
+
+    public static function getNavigationBadge(): ?string
+{
+    return (string) static::getModel()
+        ::whereHas('student', function ($query) {
+            $query->where('kelas', 'XI');
+        })
+        ->count();
+}
+
+public static function getNavigationBadgeColor(): ?string
+{
+    return 'warning';
+}
+    public static function getLabel(): string
+    {
+        return 'Kelas XI';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Kelas X';
+    }
+
 
     public static function form(Form $form): Form
 {
@@ -109,6 +137,17 @@ class KelasXIResource extends Resource
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+
+            Action::make('rapor')
+                ->label('Rapor')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->url(fn (KelasXI $record) => route('siswa.rapor', [
+                    'student' => $record->student_id,
+                    'rapor' => $record->id,
+                ]))
+                ->openUrlInNewTab(),
         ])
         ->bulkActions([
             Tables\Actions\DeleteBulkAction::make(),

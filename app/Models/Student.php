@@ -41,10 +41,27 @@ class Student extends Model
 
         // status
         'status',
+
+        // kategori
+        'kategori',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($student) {
+            if (empty($student->kategori)) {
+                $student->kategori = collect(['A', 'B'])->random();
+            }
+        });
+    }
 
     public function payments()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function TagihanSPP()
+    {
+        return $this->hasMany(TagihanSPP::class);
     }
 }

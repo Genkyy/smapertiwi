@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\SelectFilter;
 
 
 class KelasXResource extends Resource
@@ -23,6 +24,32 @@ class KelasXResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $cluster = AkademikCluster::class;
+    protected static ?string $navigationLabel = 'Kelas X';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()
+            ::whereHas('student', function ($query) {
+                $query->where('kelas', 'X');
+            })
+            ->count();
+    }
+
+public static function getNavigationBadgeColor(): ?string
+{
+    return 'warning';
+}
+
+    public static function getLabel(): string
+    {
+        return 'Kelas X';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Kelas X';
+    }
+
 
     public static function form(Form $form): Form
 {
@@ -103,6 +130,8 @@ class KelasXResource extends Resource
                 ->label('Nama Siswa')
                 ->searchable(),
 
+            Tables\Columns\TextColumn::make('student.kategori')->label('Kategori')
+            ->sortable(),
             Tables\Columns\TextColumn::make('semester'),
             Tables\Columns\TextColumn::make('tahun_ajaran'),
 
@@ -110,6 +139,27 @@ class KelasXResource extends Resource
                 ->date()
                 ->label('Tanggal Input'),
         ])
+
+        
+    ->filters([
+    SelectFilter::make('kategori')
+    ->label('Kategori Siswa')
+    ->options([
+        'A' => 'Kelas A',
+        'B' => 'Kelas B',
+    ])
+    ->query(function ($query, array $data) {
+        if (blank($data['value'])) {
+            return;
+        }
+
+        $query->whereHas('student', function ($q) use ($data) {
+            $q->where('kategori', $data['value']);
+        });
+    }),
+
+    ])
+
         ->actions([
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),

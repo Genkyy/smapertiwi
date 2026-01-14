@@ -10,6 +10,14 @@ class EditSiswaBaru extends EditRecord
 {
     protected static string $resource = SiswaBaruResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'siswabaru_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
+
     protected function getHeaderActions(): array
     {
         return [

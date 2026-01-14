@@ -10,6 +10,13 @@ class EditCalendarEvent extends EditRecord
 {
     protected static string $resource = CalendarEventResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'calendarevent_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
     protected function getHeaderActions(): array
     {
         return [

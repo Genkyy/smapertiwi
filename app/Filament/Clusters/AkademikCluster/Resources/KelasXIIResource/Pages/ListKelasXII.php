@@ -3,17 +3,17 @@
 namespace App\Filament\Clusters\AkademikCluster\Resources\KelasXIIResource\Pages;
 
 use App\Filament\Clusters\AkademikCluster\Resources\KelasXIIResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Clusters\AkademikCluster\Resources\KelasXIIResource\Widgets\KelasXIIStats;
 
-class ListKelasXIIS extends ListRecords
+class ListKelasXII extends ListRecords
 {
     protected static string $resource = KelasXIIResource::class;
 
-    protected function getHeaderActions(): array
+    protected function getHeaderWidgets(): array
     {
         return [
-            Actions\CreateAction::make(),
+            KelasXIIStats::class,
         ];
     }
 }

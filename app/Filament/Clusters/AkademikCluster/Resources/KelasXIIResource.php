@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action;
 
 class KelasXIIResource extends Resource
 {
@@ -21,6 +22,34 @@ class KelasXIIResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $cluster = AkademikCluster::class;
+
+    protected static ?string $navigationLabel = 'Kelas XII';
+
+
+    public static function getNavigationBadge(): ?string
+{
+    return (string) static::getModel()
+        ::whereHas('student', function ($query) {
+            $query->where('kelas', 'XII');
+        })
+        ->count();
+}
+
+public static function getNavigationBadgeColor(): ?string
+{
+    return 'warning';
+}
+
+    public static function getLabel(): string
+    {
+        return 'Kelas XII';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Kelas XII';
+    }
+
 
     public static function form(Form $form): Form
 {
@@ -109,6 +138,16 @@ class KelasXIIResource extends Resource
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+            Tables\Actions\Action::make('rapor')
+                ->label('Rapor')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->url(fn (KelasXII $record) => route('siswa.rapor', [
+                    'student' => $record->student_id,
+                    'rapor' => $record->id,
+                ]))
+                ->openUrlInNewTab(),
         ])
         ->bulkActions([
             Tables\Actions\DeleteBulkAction::make(),
@@ -125,7 +164,7 @@ class KelasXIIResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListKelasXIIS::route('/'),
+            'index' => Pages\ListKelasXII::route('/'),
             'create' => Pages\CreateKelasXII::route('/create'),
             'edit' => Pages\EditKelasXII::route('/{record}/edit'),
         ];

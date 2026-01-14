@@ -10,6 +10,14 @@ class EditKelasXII extends EditRecord
 {
     protected static string $resource = KelasXIIResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return session()->pull(
+            'kelasxii_return_url',
+            $this->getResource()::getUrl('index')
+        );
+    }
+
     protected function getHeaderActions(): array
     {
         return [
