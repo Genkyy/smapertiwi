@@ -24,17 +24,6 @@ class DataSiswaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
 
-public static function getNavigationBadge(): ?string
-{
-    return (string) static::getModel()
-        ::whereIn('status', [
-            'aktif',
-            'lulus',
-            'nonaktif',
-        ])
-        ->count();
-}
-
 public static function getNavigationBadgeColor(): ?string
 {
     $count = static::getModel()
@@ -42,6 +31,7 @@ public static function getNavigationBadgeColor(): ?string
             'aktif',
             'lulus',
             'nonaktif',
+            'baru',
         ])
         ->count();
 
@@ -52,9 +42,10 @@ public static function getEloquentQuery(): Builder
 {
     return parent::getEloquentQuery()
         ->whereIn('status', [
-            'aktif',
+            'aktif',            
             'lulus',
             'nonaktif',
+            'baru',
         ]);
 }
 
@@ -109,10 +100,15 @@ public static function getEloquentQuery(): Builder
                 'aktif',
                 'lulus',
                 'nonaktif',
+                'baru',
             ])
         )
             ->columns([
-                Tables\Columns\TextColumn::make('nama_lengkap')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('nama_lengkap')
+                ->searchable()
+                ->sortable(),
+
+
                 Tables\Columns\TextColumn::make('foto')
                     ->label('Foto')
                     ->formatStateUsing(fn ($state) => $state ? '<img src="' . asset('storage/' . $state) . '" alt="Foto" class="w-16 h-16 object-cover rounded-full">' : '')
@@ -139,7 +135,7 @@ public static function getEloquentQuery(): Builder
                     ->label('CV')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
-                    ->url(fn (Student $record) => route('siswa.cv', $record))
+                    ->url(fn ($record) => route('siswa.cv', $record->siswa ?? $record))
                     ->openUrlInNewTab(),
             ])
 

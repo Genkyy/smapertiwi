@@ -3,18 +3,21 @@
 namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
+use App\Models\TagihanSpp;
 
 class SppStatus extends ChartWidget
 {
-    protected static ?string $heading = 'Status Pembayaran SPP';
+    protected static ?string $heading = 'Status SPP';
+
+    // Supaya widget ini bisa berdampingan dengan widget lain
+    protected int | string | array $columnSpan = 1; // 'full', 1, 2, dll. sesuai layout
 
     protected static ?int $sort = 3;
 
     protected function getData(): array
     {
-        // contoh data (nanti bisa dari database)
-        $lunas = 930;
-        $belum = 310;
+        $lunas = TagihanSpp::where('status', 'paid')->count();
+        $belum = TagihanSpp::where('status', 'unpaid')->count();
 
         return [
             'datasets' => [
@@ -28,7 +31,7 @@ class SppStatus extends ChartWidget
             ],
             'labels' => [
                 'Lunas',
-                'Belum Lunas',
+                'Belum',
             ],
         ];
     }
@@ -39,14 +42,25 @@ class SppStatus extends ChartWidget
     }
 
     protected function getOptions(): array
-    {
-        return [
-            'cutout' => '70%',
-            'plugins' => [
-                'legend' => [
-                    'position' => 'bottom',
+{
+    return [
+        'cutout' => '80%', // bikin ring lebih tipis
+        'responsive' => true,
+        'maintainAspectRatio' => false, // paksa chart mengikuti container
+        'plugins' => [
+            'legend' => [
+                'position' => 'bottom',
+                'labels' => [
+                    'boxWidth' => 12,
+                    'padding' => 8,
                 ],
             ],
-        ];
-    }
+        ],
+        // pastikan skala hilang, Doughnut biasanya gak perlu, tapi aman
+        'scales' => [
+            'x' => ['display' => false],
+            'y' => ['display' => false],
+        ],
+    ];
+}
 }

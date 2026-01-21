@@ -25,9 +25,30 @@ class StatusPemabayaranResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
-    }
+                Forms\Components\Section::make('Tagihan SPP')
+                ->icon('heroicon-o-document-text')
+                ->columns(2)
+                ->schema([
+                    Forms\Components\TextInput::make('tagihan_spp_id')->required(),
+                    Forms\Components\TextInput::make('invoice')->required(),
+                    Forms\Components\TextInput::make('amount')->required(),
+                    Forms\Components\Select::make('method')
+                        ->options([
+                            'cash' => 'Cash',
+                            'transfer' => 'Transfer',
+                            'manual' => 'Manual',
+                        ])->required(),
+                    Forms\Components\FileUpload::make('proof')->directory('bukti_pembayaran')->required(),
+                    Forms\Components\Select::make('status')
+                        ->options([
+                            'pending' => 'Pending',
+                            'verified' => 'Verified',
+                            'rejected' => 'Rejected',
+                        ])->required(),
+                    Forms\Components\DatePicker::make('paid_at'),
+                        ]),
+                        ]);
+                        }
 
     public static function table(Table $table): Table
     {

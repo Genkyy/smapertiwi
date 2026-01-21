@@ -21,15 +21,7 @@ class GuruStaffResource extends Resource
     protected static ?string $navigationGroup = 'Manajemen Guru & Staff';
     protected static ?string $navigationLabel = 'Guru & Staff';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::count();
-    }
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return static::getModel()::count() > 10 ? 'warning' : 'warning';
-    }
+ 
 
     public static function form(Form $form): Form
 {

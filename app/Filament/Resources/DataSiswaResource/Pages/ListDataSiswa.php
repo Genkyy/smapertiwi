@@ -9,6 +9,9 @@ use Filament\Tables\Columns\TextColumn;
 use App\Models\Student;
 use App\Models\NilaiAkademik;
 use App\Models\Presensi;
+use App\Filament\Resources\DataSiswaResource\Widgets\DataSiswaStats;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class ListDataSiswa extends ListRecords
 {
@@ -17,38 +20,76 @@ class ListDataSiswa extends ListRecords
     public function getTabs(): array
     {
         return [
-            'siswa' => Tab::make('Data Siswa')
-                ->modifyQueryUsing(fn () => Student::query()),
+            Tab::make('Aktif')
+            ->modifyQueryUsing(fn ($query) =>
+                $query->where('status', 'aktif')
+            ),
 
-            'akademik' => Tab::make('Akademik Nilai')
-                ->modifyQueryUsing(fn () => NilaiAkademik::query()),
+            Tab::make('Baru')
+                ->modifyQueryUsing(fn ($query) =>
+                    $query->where('status', 'baru')
+                ),
+            Tab::make('Lulus')
+            ->modifyQueryUsing(fn ($query) =>
+                $query->where('status', 'lulus')
+            ),
 
-            'presensi' => Tab::make('Presensi')
-                ->modifyQueryUsing(fn () => Presensi::query()),
+            Tab::make('Nonaktif')
+            ->modifyQueryUsing(fn ($query) =>
+                $query->where('status', 'nonaktif')
+            ),
         ];
     }
 
-    protected function getTableColumns(): array
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            DataSiswaStats::class,
+        ];
+    }
+    
+    protected function getTableQuery(): Builder
+    {
+        return match ($this->activeTab) {
+            'akademik' => NilaiAkademik::query()->with('student'),
+            'presensi' => Presensi::query()->with('student'),
+            default    => Student::query(),
+        };
+    }
+
+protected function getTableColumns(): array
     {
         return match ($this->activeTab) {
             'akademik' => [
-                TextColumn::make('siswa.nama_lengkap')->label('Siswa'),
-                TextColumn::make('mapel'),
-                TextColumn::make('nilai'),
+                Tables\Columns\TextColumn::make('student.nama_lengkap')
+                    ->label('Siswa'),
+
+                Tables\Columns\TextColumn::make('mapel'),
+                Tables\Columns\TextColumn::make('nilai'),
             ],
 
             'presensi' => [
-                TextColumn::make('siswa.nama_lengkap'),
-                TextColumn::make('tanggal'),
-                TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('student.nama_lengkap'),
+                Tables\Columns\TextColumn::make('tanggal'),
+                Tables\Columns\TextColumn::make('status'),
             ],
 
             default => [
-                TextColumn::make('nama_lengkap'),
-                TextColumn::make('nisn'),
-                TextColumn::make('jurusan'),
+                Tables\Columns\TextColumn::make('nama_lengkap'),
+                Tables\Columns\TextColumn::make('nisn'),
+                Tables\Columns\TextColumn::make('jurusan'),
             ],
         };
     }
+
+    protected function getTableActions(): array
+    {
+        // ❗ penting: kosongkan action agar tidak error
+        return $this->activeTab === 'siswa'
+            ? parent::getTableActions()
+            : [];
+    }
 }
+
     

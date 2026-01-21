@@ -20,9 +20,13 @@ use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\AttendanceChart;
 use App\Filament\Widgets\GradeChart;
 use App\Filament\Widgets\FinanceWidget;
-use App\Filament\Widgets\ActivityLog;
+use App\Filament\Widgets\ActivityLogWidget;
 use App\Filament\Widgets\SppStatus;
 use App\Filament\Widgets\AgendaWidget;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
+
+
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -51,6 +55,16 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
 
+            ->plugins([
+            FilamentFullCalendarPlugin::make()
+                ->selectable()
+                ->editable()
+                ->timezone('Asia/Jakarta')
+                ->locale('id'),
+            
+
+        ])
+
 
             ->pages([
                 Pages\Dashboard::class,
@@ -58,10 +72,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 StatsOverview::class,
                 AttendanceChart::class,
-                GradeChart::class,
-                FinanceWidget::class,
-                ActivityLog::class,
                 SppStatus::class,
+                ActivityLogWidget::class,
                 AgendaWidget::class,
             ])
 
@@ -80,6 +92,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
-
+            
     }
+    
 }

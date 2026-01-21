@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Models\JadwalPelajaran;
 use App\Filament\Resources\JadwalPelajaranResource\Pages;
+use App\Filament\Resources\JadwalPelajaranResource\Widgets\JadwalWidget;
+
 
 use Filament\Resources\Resource;
 use Filament\Forms;
@@ -102,6 +104,13 @@ class JadwalPelajaranResource extends Resource
             'index'  => Pages\ListJadwalPelajarans::route('/'),
             'create' => Pages\CreateJadwalPelajaran::route('/create'),
             'edit'   => Pages\EditJadwalPelajaran::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            JadwalWidget::class,
         ];
     }
 }

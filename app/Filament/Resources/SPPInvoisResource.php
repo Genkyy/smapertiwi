@@ -3,19 +3,26 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SPPInvoisResource\Pages;
-use App\Filament\Resources\SPPInvoisResource\RelationManagers;
 use App\Models\TagihanSpp;
+
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+
 use Filament\Resources\Resource;
+
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\EditAction;
+
+use Filament\Notifications\Notification;
 
 class SPPInvoisResource extends Resource
 {
-    protected static ?string $model = TagihanSPP::class;
+    protected static ?string $model = TagihanSpp::class;
 
     protected static ?string $navigationGroup = 'Keuangan';
     protected static ?string $navigationLabel = 'Tagihan SPP';
@@ -25,59 +32,201 @@ class SPPInvoisResource extends Resource
     {
         return (string) static::getModel()::count();
     }
+
     public static function getNavigationBadgeColor(): ?string
     {
-        return static::getModel()::count() > 10 ? 'danger' : 'danger';
+        return 'danger';
     }
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                //
-            ]);
+        return $form->schema([
+            Forms\Components\Section::make('Tagihan SPP')
+                ->icon('heroicon-o-document-text')
+                ->columns(2)
+                ->schema([
+
+                    Forms\Components\TextInput::make('student_id')
+                        ->label('ID Siswa')
+                        ->required(),
+
+                    Select::make('bulan')
+                        ->label('Bulan Tagihan')
+                        ->options([
+                            'Januari' => 'Januari',
+                            'Februari' => 'Februari',
+                            'Maret' => 'Maret',
+                            'April' => 'April',
+                            'Mei' => 'Mei',
+                            'Juni' => 'Juni',
+                            'Juli' => 'Juli',
+                            'Agustus' => 'Agustus',
+                            'September' => 'September',
+                            'Oktober' => 'Oktober',
+                            'November' => 'November',
+                            'Desember' => 'Desember',
+                        ])
+                        ->required(),
+
+                    Forms\Components\TextInput::make('tahun_ajaran')
+                        ->label('Tahun Ajaran')
+                        ->required(),
+
+                    Forms\Components\TextInput::make('nominal')
+                        ->label('Nominal')
+                        ->numeric()
+                        ->required(),
+
+                    Select::make('status')
+                        ->label('Status Pembayaran')
+                        ->options([
+                            'unpaid' => 'Belum Bayar',
+                            'paid' => 'Sudah Bayar',
+                        ])
+                        ->default('unpaid')
+                        ->required(),
+
+                    Forms\Components\DatePicker::make('jatuh_tempo')
+                        ->label('Jatuh Tempo'),
+
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+
                 Tables\Columns\TextColumn::make('student.nama_lengkap')
-                ->label('Siswa')
-                ->searchable(),
+                    ->label('Siswa')
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('bulan'),
-            Tables\Columns\TextColumn::make('tahun_ajaran'),
+                Tables\Columns\TextColumn::make('bulan')
+                    ->label('Bulan'),
 
-            Tables\Columns\TextColumn::make('nominal')
-                ->money('IDR'),
+                Tables\Columns\TextColumn::make('tahun_ajaran')
+                    ->label('Tahun'),
 
-            Tables\Columns\BadgeColumn::make('status')
-                ->colors([
-                    'danger' => 'unpaid',
-                    'success'=> 'paid',
-                ]),
-            Tables\Columns\TextColumn::make('jatuh_tempo')
-                            //
+                Tables\Columns\TextColumn::make('nominal')
+                    ->label('Nominal')
+                    ->money('IDR'),
+
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
+                    ->colors([
+                        'danger' => 'unpaid',
+                        'success' => 'paid',
+                    ]),
+
+                Tables\Columns\TextColumn::make('jatuh_tempo')
+                    ->label('Jatuh Tempo')
+                    ->date(),
+
             ])
-            ->filters([
-                //
-            ])
+
             ->actions([
-                Tables\Actions\EditAction::make(),
+
+                    Action::make('acc')
+                    ->label('ACC')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (TagihanSpp $record) => $record->status === 'unpaid')
+                    ->requiresConfirmation()
+                    ->modalHeading('Setujui Pembayaran')
+                    ->modalDescription('Apakah Anda yakin ingin menyetujui pembayaran SPP ini?')
+                    ->action(function (TagihanSpp $record) {
+
+                        $record->update([
+                            'status' => 'paid',
+                        ]);
+
+                        Notification::make()
+                            ->title('Pembayaran Disetujui')
+                            ->body('Status tagihan SPP berhasil diubah menjadi LUNAS.')
+                            ->success()
+                            ->send();
+                    }),
+
+                Action::make('bayar')
+                    ->label('Bayar sekaligus')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('info')
+                    ->form([
+                        Select::make('bulan')
+                            ->label('Bayar Bulan')
+                            ->multiple()
+                            ->required()
+                            ->options([
+                                'Januari' => 'Januari',
+                                'Februari' => 'Februari',
+                                'Maret' => 'Maret',
+                                'April' => 'April',
+                                'Mei' => 'Mei',
+                                'Juni' => 'Juni',
+                                'Juli' => 'Juli',
+                                'Agustus' => 'Agustus',
+                                'September' => 'September',
+                                'Oktober' => 'Oktober',
+                                'November' => 'November',
+                                'Desember' => 'Desember',
+                            ]),
+                    ])
+                    ->action(function (TagihanSpp $record, array $data) {
+
+                        foreach ($data['bulan'] as $bulan) {
+                            TagihanSpp::updateOrCreate(
+                                [
+                                    'student_id' => $record->student_id,
+                                    'bulan' => $bulan,
+                                    'tahun_ajaran' => $record->tahun_ajaran,
+                                ],
+                                [
+                                    'nominal' => $record->nominal,
+                                    'status' => 'paid',
+                                ]
+                            );
+                        }
+
+                        Notification::make()
+                            ->title('Pembayaran Berhasil')
+                            ->body('Tagihan bulan terpilih telah dilunasi.')
+                            ->success()
+                            ->send();
+                    }),
+
+
+
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                BulkAction::make('bayar')
+                    ->label('Bayar Tagihan Terpilih')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function ($records) {
+
+                        foreach ($records as $tagihan) {
+                            if ($tagihan->status === 'unpaid') {
+                                $tagihan->update([
+                                    'status' => 'paid',
+                                ]);
+                            }
+                        }
+
+                        Notification::make()
+                            ->title('Pembayaran Berhasil')
+                            ->body('Tagihan terpilih berhasil dilunasi.')
+                            ->success()
+                            ->send();
+                    }),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
