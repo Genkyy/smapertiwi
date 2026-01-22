@@ -11,7 +11,7 @@ class ActivityLogWidget extends BaseWidget
 {
     protected static ?string $heading = 'Aktivitas Terakhir';
 
-    protected int | string | array $columnSpan = 1;
+    protected int | string | array $columnSpan = 8;
 
     protected function getTableQuery(): Builder
     {

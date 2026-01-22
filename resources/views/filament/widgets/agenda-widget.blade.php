@@ -1,43 +1,61 @@
-<x-filament::card>
-    <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold">Agenda & Informasi</h3>
-        <span class="text-sm text-primary font-medium">Lihat Semua</span>
+<x-filament::card class="p-0">
+    {{-- HEADER --}}
+    <div class="px-6 py-4 border-b">
+        <h3 class="text-lg font-bold">
+            Agenda & Kegiatan
+        </h3>
     </div>
 
-    <div class="space-y-4">
+    {{-- LIST AGENDA --}}
+    <div class="divide-y">
         @foreach ($agendas as $agenda)
-            <div class="flex gap-4 items-start">
-                <div class="flex flex-col items-center min-w-[60px] bg-gray-100 dark:bg-gray-800 rounded-lg p-2 border">
-                    <span class="text-xs font-bold text-red-500 uppercase">
+            <div class="flex gap-4 px-6 py-4">
+                {{-- TANGGAL --}}
+                <div class="flex flex-col items-center justify-center
+                            w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800">
+                    <span class="text-xs font-semibold uppercase text-gray-500">
                         {{ \Carbon\Carbon::parse($agenda->tanggal)->format('M') }}
                     </span>
-                    <span class="text-xl font-bold">
+                    <span class="text-xl font-bold text-gray-900 dark:text-white">
                         {{ \Carbon\Carbon::parse($agenda->tanggal)->format('d') }}
                     </span>
                 </div>
 
-                <div class="flex-1 border-b pb-4">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-bold text-sm">
-                            {{ $agenda->judul }}
-                        </h4>
+                {{-- KONTEN --}}
+                <div class="flex-1 space-y-1">
+                    <h4 class="font-semibold text-base">
+                        {{ $agenda->judul }}
+                    </h4>
 
-                        <span class="text-xs px-2 py-1 rounded bg-primary/10 text-primary">
-                            {{ ucfirst($agenda->kategori) }}
+                    <div class="flex items-center text-sm text-gray-500 gap-2">
+                        <span>🕒</span>
+                        <span>
+                            {{ $agenda->jam_mulai ?? '00:00' }}
+                            -
+                            {{ $agenda->jam_selesai ?? 'Selesai' }}
+                            • {{ $agenda->lokasi ?? 'Lokasi' }}
                         </span>
                     </div>
 
-                    <p class="text-xs text-gray-500 mt-1">
-                        {{ $agenda->deskripsi }}
-                    </p>
-
-                    @if($agenda->jam_mulai)
-                        <div class="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                            🕒 {{ $agenda->jam_mulai }} - {{ $agenda->jam_selesai }}
-                        </div>
-                    @endif
+                    {{-- BADGE / EXTRA --}}
+                    <div class="flex items-center gap-2 mt-2">
+                        @if($agenda->kategori === 'penting')
+                            <span class="text-xs font-semibold px-3 py-1 rounded-full
+                                         bg-green-100 text-green-700">
+                                PENTING
+                            </span>
+                        @endif
+                    </div>
                 </div>
             </div>
         @endforeach
+    </div>
+
+    {{-- FOOTER --}}
+    <div class="px-6 py-4 border-t text-center">
+        <a href="#"
+           class="text-sm font-semibold text-primary hover:underline">
+            BUKA KALENDER PENUH
+        </a>
     </div>
 </x-filament::card>
